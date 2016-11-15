@@ -8,6 +8,8 @@
 #include <ostream>
 #include <string>
 #include <string.h>
+#include "json/json.h"
+#include "json/json_object.h"
 
 using boost::asio::ip::tcp;
 
@@ -19,14 +21,14 @@ class client
   boost::asio::streambuf request_;
   boost::asio::streambuf response_;
   tcp::resolver resolver_;
-  //char reply_[3451];
   std::string schma;
   std::string tenant;
   std::string pubkey;
   std::string servr;
+  std::string cjson;
+  std::ostringstream sline;
   
-  //boost::asio::streambuf reply_;
-  //boost::asio::streambuf request_;
+  
   public:
   client(boost::asio::io_service& io_service, boost::asio::ssl::context& context,
 	 boost::asio::ip::tcp::resolver::iterator endpoint_iterator, std::string server,std::string schema_name,
@@ -50,5 +52,10 @@ e57e3d0b2ad\",\"platform\": \"linux\",\"deviceId\": \"623bce38-a1f4-11e6-bb6c-34
 
       return json;
     }
+  std::string get_response_json(void)
+    {
+      return cjson;
+    }
+
 };
 #endif

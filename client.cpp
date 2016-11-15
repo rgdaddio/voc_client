@@ -34,6 +34,7 @@ client::client(boost::asio::io_service& io_service, boost::asio::ssl::context& c
 
 bool client::verify_certificate(bool preverified, boost::asio::ssl::verify_context& ctx)
   {
+    //JUST A DUMMY fOR NOW
     char subject_name[256];
     X509* cert = X509_STORE_CTX_get_current_cert(ctx.native_handle());
     X509_NAME_oneline(X509_get_subject_name(cert), subject_name, 256);
@@ -84,7 +85,7 @@ void client::handle_connect(const boost::system::error_code& err)
       {
 	// The connection failed. Try the next endpoint in the list.
 	////socket_.lowest_layer().close(); FIXME
-	//tcp::endpoint endpoint = *endpoint_iterator;
+
 	async_connect(socket_.lowest_layer(),citerator,
 			      boost::bind(&client::handle_connect, this,
 					  boost::asio::placeholders::error));
@@ -135,8 +136,7 @@ void client::handle_read_status_line(const boost::system::error_code& err)
 	    std::cout << status_code << "\n";
 	    return;
 	  }
-	//std::getline(response_stream, content_length);
-	std::cout << "length!!: " << content_length << "\n" << std::endl;
+
 	// Read the response headers, which are terminated by a blank line.
 	boost::asio::async_read_until(socket_, response_, "\r\n\r\n",
 				      boost::bind(&client::handle_read_headers, this,
@@ -151,6 +151,7 @@ void client::handle_read_status_line(const boost::system::error_code& err)
 
 void client::handle_read_headers(const boost::system::error_code& err, size_t bytes_transferred)
   {
+    
     if (!err)
       {
 	// Process the response headers.
@@ -162,8 +163,11 @@ void client::handle_read_headers(const boost::system::error_code& err, size_t by
 
 	// Write whatever content we already have to output.
 	if (response_.size() > 0)
-	  std::cout << &response_;
-
+	  {
+	    sline << &response_;
+	    cjson = sline.str();
+	  }
+	  
 	// Start reading remaining data until EOF.
 	boost::asio::async_read(socket_, response_,
 				boost::asio::transfer_at_least(1),
@@ -179,13 +183,14 @@ void client::handle_read_headers(const boost::system::error_code& err, size_t by
 
 void client::handle_read_content(const boost::system::error_code& err, size_t bytes_transferred)
   {
+    sline << &response_;
+    cjson = sline.str();
+    
     if(bytes_transferred != 0)
       {
 	if (!err)
 	  {
 	    // Write all of the data that has been read so far.
-	    std::cout << &response_;
-	
 	    // Continue reading remaining data until EOF.
 	    boost::asio::async_read(socket_, response_,
 				    boost::asio::transfer_at_least(1),
