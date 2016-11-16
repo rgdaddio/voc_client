@@ -12,5 +12,9 @@ int handle_registration_json(std::string jstr)
   
   std::string token = json_object_get_string(new_obj);
   std::cout << "ATOKEN: " << token << std::endl;
-  close_voc_db(db);;
+  std::cout << "GOTTTTTTTTTT " << std::endl;
+  int rc = create_user_table(db);
+  std::cout << "create status: " << rc << std::endl;
+
+  close_voc_db(db);
 }
