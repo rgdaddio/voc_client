@@ -29,7 +29,7 @@ int main(int argc, char* argv[])
     json_object *new_obj = json_tokener_parse(jstr.c_str());
     new_obj = json_object_object_get(new_obj, "accessToken");
     std::string token = json_object_get_string(new_obj);
-    std::cout << "ATOKEN: : " << token << std::endl;
+    std::cout << "ATOKEN: " << token << std::endl;
      
  }catch (std::exception& e){
      std::cerr << "Exception: " << e.what() << "\n";

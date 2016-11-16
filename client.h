@@ -10,7 +10,7 @@
 #include <string.h>
 #include "json/json.h"
 #include "json/json_object.h"
-
+#include <sqlite3.h> 
 using boost::asio::ip::tcp;
 
 class client
