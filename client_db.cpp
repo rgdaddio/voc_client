@@ -9,7 +9,7 @@ sqlite3 *open_voc_db(void)
   char *zErrMsg = 0;
   int rc;
   
-  rc = sqlite3_open("test.db", &db);
+  rc = sqlite3_open("rgd.db", &db);
   
   if( rc ){
     fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
@@ -44,10 +44,10 @@ int create_user_table(sqlite3 *db)
   char *sql = "create table if not exists voc_user ("\
     "userid text,"\
     "password text,"\
-    "device_id text,"\                                         
+    "device_id text,"\
     "platform text,"\
     "device_type text,"\
-    "access_token text,"\ 
+    "access_token text,"\
     "refresh_token text,"\
     "voc_id text,"\
     "congestion_detection text,"\
