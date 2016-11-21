@@ -10,7 +10,9 @@
 #include <string.h>
 #include "json/json.h"
 #include "json/json_object.h"
-#include <sqlite3.h> 
+#include <sqlite3.h>
+#include <string>
+#include <sstream>
 using boost::asio::ip::tcp;
 
 class client
@@ -47,11 +49,15 @@ class client
 
   std::string get_test_json(void)
     {
-      std::string json ("{\"serverState\" :{\"schemaName\": \"pvoc_154tenant_11468515933296\",\"tenantId\": \"quincy_lab_1468860481\"},\"publicKey\": \"57f7fe493be4adfd0f8d80e42998b33cb3bdbde6465fa45b535e2\
-e57e3d0b2ad\",\"platform\": \"linux\",\"deviceId\": \"623bce38-a1f4-11e6-bb6c-3417eb9985a6\", \"deviceType\": \"pc\", \"pushToken\": \"tt\", \"version\" : \"17.1.3\"}");
-
-      return json;
+      std::ostringstream oss;
+      oss << "{" << "\"serverState\"" << ":" << "{" << "\"schemaName\"" << ":" << "\"" << schma << "\"" << "," << "\"tenantId\"" ":" 
+	  << "\""<< tenant << "\"" << "}" << "," << "\"publicKey\"" << ":" << "\"" << pubkey << "\"" << "," << "\"platform\"" ":" "\"linux\"" 
+	  << "," << "\"deviceId\"" ":" << "\"623bce38-a1f4-11e6-bb6c-3417eb9985a6\"" << "," << "\"deviceType\"" << ":" << "\"pc\"" 
+	  << "," << "\"pushToken\"" << ":" << "\"tt\"" << "," << "\"version\"" << ":" << "\"17.1.3\"""}";    
+      
+      return oss.str();
     }
+
   std::string get_response_json(void)
     {
       return cjson;
