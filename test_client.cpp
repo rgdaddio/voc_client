@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
     
     std::string jstr = c.get_response_json();
     std::cout << "Calling Handle" << std::endl;
-    handle_registration_json(jstr);
+    handle_registration_json(jstr, argv[1]);
     //TEST JSON-c
     //json_object *new_obj = json_tokener_parse(jstr.c_str());
     //new_obj = json_object_object_get(new_obj, "accessToken");

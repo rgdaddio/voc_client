@@ -53,8 +53,8 @@ class client
       oss << "{" << "\"serverState\"" << ":" << "{" << "\"schemaName\"" << ":" << "\"" << schma << "\"" << "," << "\"tenantId\"" ":" 
 	  << "\""<< tenant << "\"" << "}" << "," << "\"publicKey\"" << ":" << "\"" << pubkey << "\"" << "," << "\"platform\"" ":" "\"linux\"" 
 	  << "," << "\"deviceId\"" ":" << "\"623bce38-a1f4-11e6-bb6c-3417eb9985a6\"" << "," << "\"deviceType\"" << ":" << "\"pc\"" 
-	  << "," << "\"pushToken\"" << ":" << "\"tt\"" << "," << "\"version\"" << ":" << "\"17.1.3\"""}";    
-      
+	  << "," << "\"pushToken\"" << ":" << "\"tt\"" << "," << "\"version\"" << ":" << "\"17.2.3\"""}";    
+      std::cout << "str: " << oss.str() << std::endl;
       return oss.str();
     }
 
