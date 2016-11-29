@@ -91,3 +91,17 @@ int insert_voc_table(sqlite3 *db, std::string sql_stmt)
   }
   return 0;
 }
+
+int select_voc_table(sqlite3 *db, std::string sql_stmt)
+{
+  int rc;
+  char *zErrMsg = 0;
+  rc = sqlite3_exec(db, sql_stmt.c_str(), callback, 0, &zErrMsg);
+  if(rc != SQLITE_OK){
+    fprintf(stderr, "SQL error: %s\n", zErrMsg);
+    sqlite3_free(zErrMsg);
+  }else{
+    fprintf(stdout, "User table insert sucess\n");
+  }
+  return 0;
+}
