@@ -23,10 +23,10 @@ int main(int argc, char* argv[])
     client c(io_service, context, iterator, argv[1], argv[2], argv[3], argv[4]);
     
     io_service.run();
-    std::cout << "\njson: " << c.get_response_json() << std::endl;
+    //std::cout << "\njson: " << c.get_response_json() << std::endl;
     
     std::string jstr = c.get_response_json();
-    std::cout << "Calling Handle" << std::endl;
+    //std::cout << "Calling Handle" << std::endl;
     handle_registration_json(jstr, argv[1]);
     //TEST JSON-c
     //json_object *new_obj = json_tokener_parse(jstr.c_str());

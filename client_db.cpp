@@ -28,7 +28,7 @@ void close_voc_db(sqlite3 *db)
 
 static int callback(void *NotUsed, int argc, char **argv, char **azColName){
   int i;
-  printf("hit the call back\n");
+  
   for(i=0; i<argc; i++){
     printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
   }
@@ -56,8 +56,7 @@ int create_user_table(sqlite3 *db)
     "daily_manifest integer,"\
     "daily_download_wifi integer,"\
     "daily_download_cellular integer,"\
-    "content_policy text,"\
-    "congestion text,"\
+    "congestion text,"		      \
     "sdk_capabilities text,"\
     "max_content_duration integer,"\
     "play_ads text,"\

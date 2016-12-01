@@ -38,7 +38,7 @@ int handle_registration_json(std::string jstr, std::string server)
   
   std::string token = json_object_get_string(new_obj);
   int rc = create_user_table(db);
-  std::cout << "create status: " << rc << std::endl;
+  //std::cout << "create status: " << rc << std::endl;
   rc = creat_user_table_entry(db, jstr, server);
   rc = select_voc_table(db, testsql); 
   close_voc_db(db);
@@ -130,7 +130,8 @@ std::string daily_download_cellular(json_object *j)
   json_object *tmp = json_object_object_get(j, "dailyDownloadCellular");
   if(!tmp){
     std::cout << "FAIL on get !!!!!!!!!!!!\n" << std::endl;
-    return 0;
+    std::string sc = "";
+    return sc;
   }
   s << json_object_get_int64(tmp);
   return s.str();
@@ -215,9 +216,9 @@ static int creat_user_table_entry(sqlite3 *db, std::string jstr, std::string ser
   std::string password = "test";
   std::string tnull = "NULL";
   int dummy = 0;
-  
+
   std::string sqlstatement =
-    "INSERT INTO voc_user (my_row, userid, password, device_id, platform, device_type, access_token, refresh_token, voc_id, congestion_detection, ads_frequency, daily_quota, daily_manifest, daily_download_wifi, daily_download_cellular, content_policy, max_content_duration, play_ads, skip_policy_first_time, tod_policy, token_expiration, server, server_state) VALUES ("
+    "INSERT INTO voc_user (my_row, userid, password, device_id, platform, device_type, access_token, refresh_token, voc_id, congestion_detection, ads_frequency, daily_quota, daily_manifest, daily_download_wifi, daily_download_cellular, sdk_capabilities, max_content_duration, play_ads, skip_policy_first_time, tod_policy, token_expiration, server, server_state) VALUES ("
     + quotesqlint(tnull.c_str()) + ","
     + quotesql(userId.c_str()) + ","
     + quotesql(password.c_str()) + ","
@@ -230,10 +231,10 @@ static int creat_user_table_entry(sqlite3 *db, std::string jstr, std::string ser
     + quotesql((get_congestion_detection(new_obj)).c_str()) + ","
     + quotesql((get_ads_frequency(new_obj)).c_str()) + ","
     + quotesql((daily_download_quota(new_obj)).c_str()) + ","
+    + quotesqlint((daily_download_manifest(new_obj)).c_str()) + ","
     + quotesqlint((daily_download_wifi(new_obj)).c_str()) + ","
     + quotesqlint((daily_download_cellular(new_obj)).c_str()) + ","
     + quotesql((get_sdk_capabilities(new_obj)).c_str()) + ","
-    + quotesqlint((daily_download_manifest(new_obj)).c_str()) + ","
     + quotesqlint((max_content_duration(new_obj)).c_str()) + ","
     + quotesql((get_play_ads(new_obj)).c_str()) + ","
     + quotesql((get_skip_policy(new_obj)).c_str()) + ","
