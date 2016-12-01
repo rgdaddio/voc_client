@@ -1,4 +1,5 @@
 #include "client.h"
+#include "client_json.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -33,7 +34,10 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName){
     printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
   }
   printf("\n");
-  return 0;
+  if(i > 0)
+    return 0;
+  else
+    return -1;
 }
 
 
@@ -103,4 +107,49 @@ int select_voc_table(sqlite3 *db, std::string sql_stmt)
     fprintf(stdout, "User table insert sucess\n");
   }
   return 0;
+}
+
+
+int creat_user_table_entry(sqlite3 *db, std::string jstr, std::string server)
+{
+  json_object *new_obj = json_tokener_parse(jstr.c_str());
+  std::string userId = "test";
+  std::string password = "test";
+  std::string tnull = "NULL";
+  int dummy = 0;
+
+  std::string sqlstatement =
+    "INSERT INTO voc_user (my_row, userid, password, device_id, platform, device_type, access_token, refresh_token, voc_id, congestion_detection, ads_frequency, daily_quota, daily_manifest, daily_download_wifi, daily_download_cellular, sdk_capabilities, max_content_duration, play_ads, skip_policy_first_time, tod_policy, token_expiration, server, server_state) VALUES ("
+    + quotesqlint(tnull.c_str()) + ","
+    + quotesql(userId.c_str()) + ","
+    + quotesql(password.c_str()) + ","
+    + quotesql((get_device_id(new_obj)).c_str()) + ","
+    + quotesql((get_platform(new_obj)).c_str()) + ","
+    + quotesql((get_device_type(new_obj)).c_str()) + ","
+    + quotesql((get_access_token(new_obj)).c_str()) + ","
+    + quotesql((get_refresh_token(new_obj)).c_str()) + ","
+    + quotesql((get_voc_id(new_obj)).c_str()) + ","
+    + quotesql((get_congestion_detection(new_obj)).c_str()) + ","
+    + quotesql((get_ads_frequency(new_obj)).c_str()) + ","
+    + quotesql((get_daily_download_quota(new_obj)).c_str()) + ","
+    + quotesqlint((get_daily_download_manifest(new_obj)).c_str()) + ","
+    + quotesqlint((get_daily_download_wifi(new_obj)).c_str()) + ","
+    + quotesqlint((get_daily_download_cellular(new_obj)).c_str()) + ","
+    + quotesql((get_sdk_capabilities(new_obj)).c_str()) + ","
+    + quotesqlint((get_max_content_duration(new_obj)).c_str()) + ","
+    + quotesql((get_play_ads(new_obj)).c_str()) + ","
+    + quotesql((get_skip_policy(new_obj)).c_str()) + ","
+    + quotesql((get_tod_policy(new_obj)).c_str()) + ","
+    + quotesqlint((get_token_expiration(new_obj)).c_str()) + ","
+    + quotesql(server.c_str()) + ","
+    + quotesql((get_server_state(new_obj)).c_str()) +
+    ");";
+  insert_voc_table(db, sqlstatement);
+  //std::cout << "sql stmt: " << sqlstatement << std::endl;
+}
+
+
+std::string get_voc_user_json(sqlite3 db, std::string stmt)
+{
+  
 }
