@@ -45,7 +45,7 @@ int create_user_table(sqlite3 *db)
 {
   int rc;
   char *zErrMsg = 0;
-  char *sql = "create table if not exists voc_user ("\
+  const char *sql = "create table if not exists voc_user ("\
     "userid text,"\
     "password text,"\
     "device_id text,"\
@@ -149,7 +149,7 @@ int creat_user_table_entry(sqlite3 *db, std::string jstr, std::string server)
 }
 
 
-std::string get_voc_user_json(sqlite3 db, std::string stmt)
+std::string get_voc_user_json(sqlite3 *db, std::string stmt)
 {
   
 }
