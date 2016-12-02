@@ -1,6 +1,6 @@
 # voc_client
-//build
+//To build<br>
 make
 
-//run
+//To run<br>
 client \<server\> \<schema name\> \<tenant_id\> \<public key\>
