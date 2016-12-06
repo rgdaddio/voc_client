@@ -29,11 +29,13 @@ void close_voc_db(sqlite3 *db)
 
 static int callback(void *NotUsed, int argc, char **argv, char **azColName){
   int i;
-  std::map<std::string, std::string> used = *static_cast <std::map<std::string, std::string> *>(NotUsed);
+  if(NotUsed)
+    std::map<std::string, std::string> used = *static_cast <std::map<std::string, std::string> *>(NotUsed);
 
   for(i=0; i<argc; i++){
     printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
-    (*static_cast <std::map<std::string, std::string> *>(NotUsed)).insert(std::make_pair(azColName[i], argv[i] ? argv[i] : "NULL"));
+    if(NotUsed)
+      (*static_cast <std::map<std::string, std::string> *>(NotUsed)).insert(std::make_pair(azColName[i], argv[i] ? argv[i] : "NULL"));
   }
   printf("%d\n\n", i);
   return 0;
@@ -94,13 +96,17 @@ int insert_voc_table(sqlite3 *db, std::string sql_stmt)
   return 0;
 }
 
-int select_voc_table(sqlite3 *db, std::string sql_stmt)
+int select_voc_table(sqlite3 *db, std::string sql_stmt, bool ret=false)
 {
   int rc;
   char *zErrMsg = 0;
   std::map<std::string, std::string> value_map;
-  //rc = sqlite3_exec(db, sql_stmt.c_str(), callback, 0, &zErrMsg);
-  rc = sqlite3_exec(db, sql_stmt.c_str(), callback, &value_map, &zErrMsg);
+  if(ret == false){
+    rc = sqlite3_exec(db, sql_stmt.c_str(), callback, 0, &zErrMsg);
+  }
+  else
+    rc = sqlite3_exec(db, sql_stmt.c_str(), callback, &value_map, &zErrMsg);
+  
   if(rc != SQLITE_OK){
     fprintf(stderr, "SQL error: %s\n", zErrMsg);
     sqlite3_free(zErrMsg);
@@ -112,8 +118,10 @@ int select_voc_table(sqlite3 *db, std::string sql_stmt)
     {
       std::cout  << column.first << " < " << column.second << ">" << std::endl;
     }       
-  
-  return 0;
+  if(value_map.empty())
+    return 1;
+  else 
+    return 0;
 
 }
 
@@ -160,9 +168,9 @@ int creat_user_table_entry(sqlite3 *db, std::string jstr, std::string server)
 std::string get_voc_user_json(sqlite3 *db, std::string stmt)
 {
   int rc = 0;
-  std::string json = "";
+  std::string json = "test";
   std::string ustmt = "select device_id, platform, voc_id, access_token, refresh_token, server, server_state from voc_user";
-  std::string dstmt = "DELETE from voc_user where my_row='1';";
+  //std::string dstmt = "DELETE from voc_user where my_row='1';";
   rc = select_voc_table(db, stmt);
   std::cout << "get_voc_user_json "<< rc << std::endl;
   if(rc == -1)
@@ -171,9 +179,11 @@ std::string get_voc_user_json(sqlite3 *db, std::string stmt)
       return json;
     }
   
-  rc = select_voc_table(db, dstmt);
+  //rc = select_voc_table(db, dstmt);
   std::cout << "table valuex: " << rc << std::endl;
-  rc = select_voc_table(db, ustmt);
+  rc = select_voc_table(db, ustmt, true);
+  if(rc)
+    json.clear();
   std::cout << "table value2: " << rc << std::endl;
   return json;
 }
