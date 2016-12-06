@@ -29,15 +29,14 @@ void close_voc_db(sqlite3 *db)
 
 static int callback(void *NotUsed, int argc, char **argv, char **azColName){
   int i;
-  
+  std::map<std::string, std::string> used = *static_cast <std::map<std::string, std::string> *>(NotUsed);
+
   for(i=0; i<argc; i++){
     printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+    (*static_cast <std::map<std::string, std::string> *>(NotUsed)).insert(std::make_pair(azColName[i], argv[i] ? argv[i] : "NULL"));
   }
-  printf("\n");
-  if(i > 0)
-    return 0;
-  else
-    return -1;
+  printf("%d\n\n", i);
+  return 0;
 }
 
 
@@ -99,14 +98,23 @@ int select_voc_table(sqlite3 *db, std::string sql_stmt)
 {
   int rc;
   char *zErrMsg = 0;
-  rc = sqlite3_exec(db, sql_stmt.c_str(), callback, 0, &zErrMsg);
+  std::map<std::string, std::string> value_map;
+  //rc = sqlite3_exec(db, sql_stmt.c_str(), callback, 0, &zErrMsg);
+  rc = sqlite3_exec(db, sql_stmt.c_str(), callback, &value_map, &zErrMsg);
   if(rc != SQLITE_OK){
     fprintf(stderr, "SQL error: %s\n", zErrMsg);
     sqlite3_free(zErrMsg);
   }else{
-    fprintf(stdout, "User table insert sucess\n");
+    fprintf(stdout, "User table select sucess\n");
   }
+
+  for ( auto column : value_map )
+    {
+      std::cout  << column.first << " < " << column.second << ">" << std::endl;
+    }       
+  
   return 0;
+
 }
 
 
@@ -151,5 +159,21 @@ int creat_user_table_entry(sqlite3 *db, std::string jstr, std::string server)
 
 std::string get_voc_user_json(sqlite3 *db, std::string stmt)
 {
+  int rc = 0;
+  std::string json = "";
+  std::string ustmt = "select device_id, platform, voc_id, access_token, refresh_token, server, server_state from voc_user";
+  std::string dstmt = "DELETE from voc_user where my_row='1';";
+  rc = select_voc_table(db, stmt);
+  std::cout << "get_voc_user_json "<< rc << std::endl;
+  if(rc == -1)
+    {
+      std::cout << "table value1: " << rc << std::endl;
+      return json;
+    }
   
+  rc = select_voc_table(db, dstmt);
+  std::cout << "table valuex: " << rc << std::endl;
+  rc = select_voc_table(db, ustmt);
+  std::cout << "table value2: " << rc << std::endl;
+  return json;
 }
