@@ -187,4 +187,15 @@ std::string get_server_state(json_object *j)
 }
 
 
-
+#if 0
+std::string get_registration_json(void)
+{
+  std::ostringstream oss;
+  oss << "{" << "\"serverState\"" << ":" << "{" << "\"schemaName\"" << ":" << "\"" << schma << "\"" << "," << "\"tenantId\"" ":" 
+      << "\""<< tenant << "\"" << "}" << "," << "\"publicKey\"" << ":" << "\"" << pubkey << "\"" << "," << "\"platform\"" ":" "\"linux\"" 
+      << "," << "\"deviceId\"" ":" << "\"623bce38-a1f4-11e6-bb6c-3417eb9985a6\"" << "," << "\"deviceType\"" << ":" << "\"pc\"" 
+      << "," << "\"pushToken\"" << ":" << "\"tt\"" << "," << "\"version\"" << ":" << "\"17.2.3\"""}";    
+  std::cout << "str: " << oss.str() << std::endl;
+  return oss.str();
+}
+#endif

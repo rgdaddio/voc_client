@@ -1,18 +1,20 @@
 #include "client.h"
+#include "client_manifest.h"
 #include<iostream>
 
 using boost::asio::ip::tcp;
 
 client::client(boost::asio::io_service& io_service, boost::asio::ssl::context& context,
 	       boost::asio::ip::tcp::resolver::iterator endpoint_iterator, std::string server,std::string schema_name,
-	       std::string tenant_id, std::string public_key)
+	       std::string tenant_id, std::string public_key, std::string path)
   : socket_(io_service, context),
     resolver_(io_service),
     schma(schema_name),
     tenant(tenant_id),
     pubkey(public_key),
     servr(server),
-    citerator(endpoint_iterator)
+    citerator(endpoint_iterator),
+    cpath(path)
   {
     // Form the request. We specify the "Connection: close" header so that the
     // server will close the socket after transmitting the response. This will
@@ -208,9 +210,10 @@ void client::handle_read_content(const boost::system::error_code& err, size_t by
 
 void client::build_http_header(std::string server_ip, std::string json)
 {
-  std::string path("/Anaina/v0/Register");
+  //std::string path("/Anaina/v0/Register");
   std::ostream request_stream(&request_);
-  request_stream << "POST "  << path << " HTTP/1.1 \r\n";
+  //request_stream << "POST "  << path << " HTTP/1.1 \r\n";
+  request_stream << "POST "  << cpath << " HTTP/1.1 \r\n";
   request_stream << "Host:"  << servr << "\r\n";
   request_stream << "User-Agent: C/1.0\r\n";
   request_stream << "Content-Type: application/json\r\n";
@@ -220,3 +223,16 @@ void client::build_http_header(std::string server_ip, std::string json)
   request_stream << json;
 }
 
+std::string client::get_test_json(void)
+{
+  std::string access_token = manifest_processing();
+  std::cout << "get test json" << std::endl; 
+  std::cout << "token !!!!!!!!!!!!!!!!!!!" << access_token << std::endl;
+  std::ostringstream oss;
+  oss << "{" << "\"serverState\"" << ":" << "{" << "\"schemaName\"" << ":" << "\"" << schma << "\"" << "," << "\"tenantId\"" ":" 
+      << "\""<< tenant << "\"" << "}" << "," << "\"publicKey\"" << ":" << "\"" << pubkey << "\"" << "," << "\"platform\"" ":" "\"linux\"" 
+      << "," << "\"deviceId\"" ":" << "\"623bce38-a1f4-11e6-bb6c-3417eb9985a6\"" << "," << "\"deviceType\"" << ":" << "\"pc\"" 
+      << "," << "\"pushToken\"" << ":" << "\"tt\"" << "," << "\"accessToken\"" << ":" << "\"" << access_token << "\"" << "," << "\"version\"" << ":" << "\"17.2.3\"""}";    
+  std::cout << "strnew: " << oss.str() << std::endl;
+  return oss.str();
+}

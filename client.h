@@ -28,13 +28,14 @@ class client
   std::string pubkey;
   std::string servr;
   std::string cjson;
+  std::string cpath;
   std::ostringstream sline;
   
   
   public:
   client(boost::asio::io_service& io_service, boost::asio::ssl::context& context,
 	 boost::asio::ip::tcp::resolver::iterator endpoint_iterator, std::string server,std::string schema_name,
-	 std::string tenant_id, std::string public_key);
+	 std::string tenant_id, std::string public_key, std::string path);
 
   bool verify_certificate(bool preverified, boost::asio::ssl::verify_context& ctx);
 
@@ -46,21 +47,15 @@ class client
   void handle_read_headers(const boost::system::error_code& err, size_t bytes_transferred);
   void handle_read_content(const boost::system::error_code& err, size_t bytes_transferred);
   void build_http_header(std::string server_ip, std::string json);
-
-  std::string get_test_json(void)
-    {
-      std::ostringstream oss;
-      oss << "{" << "\"serverState\"" << ":" << "{" << "\"schemaName\"" << ":" << "\"" << schma << "\"" << "," << "\"tenantId\"" ":" 
-	  << "\""<< tenant << "\"" << "}" << "," << "\"publicKey\"" << ":" << "\"" << pubkey << "\"" << "," << "\"platform\"" ":" "\"linux\"" 
-	  << "," << "\"deviceId\"" ":" << "\"623bce38-a1f4-11e6-bb6c-3417eb9985a6\"" << "," << "\"deviceType\"" << ":" << "\"pc\"" 
-	  << "," << "\"pushToken\"" << ":" << "\"tt\"" << "," << "\"version\"" << ":" << "\"17.2.3\"""}";    
-      std::cout << "str: " << oss.str() << std::endl;
-      return oss.str();
-    }
+  std::string get_test_json(void);
 
   std::string get_response_json(void)
     {
       return cjson;
+    }
+  std::string get_rest_path(void)
+    {
+      return cpath;
     }
 
 };
