@@ -6,7 +6,7 @@ using boost::asio::ip::tcp;
 
 client::client(boost::asio::io_service& io_service, boost::asio::ssl::context& context,
 	       boost::asio::ip::tcp::resolver::iterator endpoint_iterator, std::string server,std::string schema_name,
-	       std::string tenant_id, std::string public_key, std::string path)
+	       std::string tenant_id, std::string public_key, std::string path, xtype type)
   : socket_(io_service, context),
     resolver_(io_service),
     schma(schema_name),
@@ -19,8 +19,11 @@ client::client(boost::asio::io_service& io_service, boost::asio::ssl::context& c
     // Form the request. We specify the "Connection: close" header so that the
     // server will close the socket after transmitting the response. This will
     // allow us to treat all data up until the EOF as the content.
-    
-    std::string json = get_test_json();
+    std::string json = "";
+    if(type == xtype::registration)
+      json = get_reg_json();
+    else if(type == xtype::get_manifest)
+      json = get_req_json();
     build_http_header(servr, json);
     
     // Start an asynchronous resolve to translate the server and service names
@@ -223,16 +226,29 @@ void client::build_http_header(std::string server_ip, std::string json)
   request_stream << json;
 }
 
-std::string client::get_test_json(void)
+std::string client::get_reg_json(void)
 {
-  std::string access_token = manifest_processing();
   std::cout << "get test json" << std::endl; 
-  std::cout << "token !!!!!!!!!!!!!!!!!!!" << access_token << std::endl;
+
   std::ostringstream oss;
   oss << "{" << "\"serverState\"" << ":" << "{" << "\"schemaName\"" << ":" << "\"" << schma << "\"" << "," << "\"tenantId\"" ":" 
       << "\""<< tenant << "\"" << "}" << "," << "\"publicKey\"" << ":" << "\"" << pubkey << "\"" << "," << "\"platform\"" ":" "\"linux\"" 
       << "," << "\"deviceId\"" ":" << "\"623bce38-a1f4-11e6-bb6c-3417eb9985a6\"" << "," << "\"deviceType\"" << ":" << "\"pc\"" 
-      << "," << "\"pushToken\"" << ":" << "\"tt\"" << "," << "\"accessToken\"" << ":" << "\"" << access_token << "\"" << "," << "\"version\"" << ":" << "\"17.2.3\"""}";    
+      << "," << "\"pushToken\"" << ":" << "\"tt\"" << "," << "\"version\"" << ":" << "\"17.2.3\"""}";    
+  std::cout << "strnew: " << oss.str() << std::endl;
+  return oss.str();
+}
+
+std::string client::get_req_json(void)
+{
+  std::map<std::string, std::string> json = manifest_processing();
+  //std::cout << "get test json" << std::endl; 
+  //std::cout << "token !!!!!!!!!!!!!!!!!!!" << access_token << std::endl;
+  std::ostringstream oss;
+  oss << "{" << "\"serverState\"" << ":" << "{" << "\"schemaName\"" << ":" << "\"" << schma << "\"" << "," << "\"tenantId\"" ":" 
+      << "\""<< tenant << "\"" << "}" << "," << "\"vocId\"" << ":" << "\"" << json["voc_id"]  << "\"" << "," << "\"platform\"" ":" "\"linux\"" 
+      << "," << "\"deviceId\"" ":" << "\"623bce38-a1f4-11e6-bb6c-3417eb9985a6\"" << "," << "\"deviceType\"" << ":" << "\"pc\"" 
+      << "," << "\"refreshToken\"" << ":" << "\"" << json["refresh_token"] << "\"" << "," << "\"accessToken\"" << ":" << "\"" << json["access_token"] << "\"" << "," << "\"version\"" << ":" << "\"17.2.3\"""}";    
   std::cout << "strnew: " << oss.str() << std::endl;
   return oss.str();
 }

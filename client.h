@@ -14,7 +14,7 @@
 #include <string>
 #include <sstream>
 using boost::asio::ip::tcp;
-
+enum class xtype {registration=1, get_manifest};
 class client
 {
   private:
@@ -35,7 +35,7 @@ class client
   public:
   client(boost::asio::io_service& io_service, boost::asio::ssl::context& context,
 	 boost::asio::ip::tcp::resolver::iterator endpoint_iterator, std::string server,std::string schema_name,
-	 std::string tenant_id, std::string public_key, std::string path);
+	 std::string tenant_id, std::string public_key, std::string path, xtype type);
 
   bool verify_certificate(bool preverified, boost::asio::ssl::verify_context& ctx);
 
@@ -47,7 +47,8 @@ class client
   void handle_read_headers(const boost::system::error_code& err, size_t bytes_transferred);
   void handle_read_content(const boost::system::error_code& err, size_t bytes_transferred);
   void build_http_header(std::string server_ip, std::string json);
-  std::string get_test_json(void);
+  std::string get_reg_json(void);
+  std::string get_req_json(void);
 
   std::string get_response_json(void)
     {

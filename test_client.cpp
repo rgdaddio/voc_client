@@ -14,7 +14,8 @@ int get_manifest_from_server(std::string arv1, std::string arv2, std::string arv
   boost::asio::ip::tcp::resolver::iterator iterator = resolver.resolve(query);
   boost::asio::ssl::context context(boost::asio::ssl::context::sslv23);
   std::string path = "/Anaina/v0/Download-Manifest";
-  client c(io_service, context, iterator, arv1, arv2, arv3, arv4, path);
+  xtype type = xtype::get_manifest;
+  client c(io_service, context, iterator, arv1, arv2, arv3, arv4, path, type);
 
   io_service.run();
   
@@ -41,7 +42,8 @@ int main(int argc, char* argv[])
     boost::asio::ip::tcp::resolver::iterator iterator = resolver.resolve(query);
     boost::asio::ssl::context context(boost::asio::ssl::context::sslv23);
     std::string path = "/Anaina/v0/Register";
-    client c(io_service, context, iterator, argv[1], argv[2], argv[3], argv[4], path);
+    xtype type = xtype::registration;
+    client c(io_service, context, iterator, argv[1], argv[2], argv[3], argv[4], path, type);
     
     io_service.run();
         
@@ -57,9 +59,11 @@ int main(int argc, char* argv[])
 
  while(1)
    {
+     std::cout << "cacheFill [y/n] " << std::endl;
      std::string mani = "cacheFill";
      std::string val;
      std::getline(std::cin,val);
+     
      if(val.compare(0,6, "cacheFill"))
        get_manifest_from_server(argv[1], argv[2], argv[3], argv[4]);
      else

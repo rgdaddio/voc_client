@@ -10,7 +10,7 @@ sqlite3 *open_voc_db(void)
   char *zErrMsg = 0;
   int rc;
   
-  rc = sqlite3_open("rgd.db", &db);
+  rc = sqlite3_open("voc_client.db", &db);
   
   if( rc ){
     fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
@@ -384,11 +384,13 @@ std::string get_voc_user_json(sqlite3 *db, std::string stmt)
   return json;
 }
 
-std::string get_voc_access_vals(sqlite3 *db)
+std::map<std::string, std::string> get_voc_access_vals(sqlite3 *db)
 {
   std::string ret = "";
   std::string ustmt = "select device_id, platform, voc_id, access_token, refresh_token, server, server_state from voc_user";
   std::map<std::string, std::string> re_map = select_voc_table_json(db, ustmt);
+  
+  std::cout << "direct map "  << re_map["access_token"] << std::endl;
 
   for ( auto column : re_map )
     {
@@ -396,10 +398,11 @@ std::string get_voc_access_vals(sqlite3 *db)
       if(column.second.compare("access_token"))
 	{
 	  std::cout<< "done wiht map" << std::endl;
-	  return column.second;
+	  //return column.second;
 	}
+    
     } 
-  return ret;
+  return re_map;
 #if 0
   if(re_map.find("access_token") == re_map.end())
     return ret;
