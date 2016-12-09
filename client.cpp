@@ -228,7 +228,7 @@ void client::build_http_header(std::string server_ip, std::string json)
 
 std::string client::get_reg_json(void)
 {
-  std::cout << "get test json" << std::endl; 
+  std::cout << "get reg json" << std::endl; 
 
   std::ostringstream oss;
   oss << "{" << "\"serverState\"" << ":" << "{" << "\"schemaName\"" << ":" << "\"" << schma << "\"" << "," << "\"tenantId\"" ":" 

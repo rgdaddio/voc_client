@@ -12,7 +12,7 @@ std::map<std::string, std::string> manifest_processing(void)
   sqlite3 *db = open_voc_db();
   std::map<std::string, std::string> message = get_voc_access_vals(db);
   std::cout << "manifest processing" << std::cout;
-  system("generate_voc_html.py");
+  //system("generate_voc_html.py");
   close_voc_db(db);
   return message;
   
@@ -23,6 +23,7 @@ int install_cache(std::string json)
 {
   std::cout << "json to install" << json << std::endl;
   json_object * jobj = json_tokener_parse(json.c_str());
+  std::cout << "object type " << json_object_get_type(jobj) << std::endl;
   //std::stringstream ss;
   //ss.str(json);
   //pt::ptree root;

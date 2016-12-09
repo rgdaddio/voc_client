@@ -2,7 +2,6 @@
 #define _CLIENT_JSON_H
 #include "client.h"
 
-int handle_registration_json(std::string jstr, std::string server);
 extern std::string get_registration_json(void);
 
 std::string get_voc_id(json_object *j);

@@ -148,7 +148,7 @@ int create_playing_table(sqlite3 *db)
       fprintf(stderr, "SQL error: %s\n", zErrMsg);
       sqlite3_free(zErrMsg);
     }else{
-      fprintf(stdout, "UUID table created sucessfully\n");
+      fprintf(stdout, "Playing table created sucessfully\n");
     }
     return 0;
 }
