@@ -24,6 +24,21 @@ int install_cache(std::string json)
   std::cout << "json to install" << json << std::endl;
   json_object * jobj = json_tokener_parse(json.c_str());
   std::cout << "object type " << json_object_get_type(jobj) << std::endl;
+  std::cout << "array length " << json_object_array_length(jobj);
+  for(int i = 0; i < json_object_array_length(jobj); i++)
+    {
+      json_object *lobj = json_object_array_get_idx(jobj, i);
+      std::cout << "in cache loop " << std::endl;
+      json_object *objtor;
+      bool status = json_object_object_get_ex(lobj, "streams", &objtor);
+      for(int i = 0; i < json_object_array_length(objtor); i++)
+	{
+	  json_object *lobj = json_object_array_get_idx(objtor, i);
+	  std::cout<< "video streams: " << json_object_to_json_string_ext(lobj, 0 ) << " type " << json_object_get_type(lobj) <<std::endl;
+	  json_object *str = json_object_object_get(lobj,"url");
+	  std::cout << "str " << json_object_get_string(str) << std::endl;
+	}
+    }
   //std::stringstream ss;
   //ss.str(json);
   //pt::ptree root;
