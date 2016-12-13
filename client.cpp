@@ -24,7 +24,13 @@ client::client(boost::asio::io_service& io_service, boost::asio::ssl::context& c
       json = get_reg_json();
     else if(type == xtype::get_manifest)
       json = get_req_json();
-    build_http_header(servr, json);
+    else
+      std::cout << "No POST operation" << std::endl; 
+    
+    if(type ==  xtype::registration || type == xtype::get_manifest)
+      build_http_post_header(servr, json);
+    else if(type == xtype::download)
+      build_http_get_header(servr, json);
     
     // Start an asynchronous resolve to translate the server and service names
     // into a list of endpoints.
@@ -211,7 +217,7 @@ void client::handle_read_content(const boost::system::error_code& err, size_t by
   }
 
 
-void client::build_http_header(std::string server_ip, std::string json)
+void client::build_http_post_header(std::string server_ip, std::string json)
 {
   //std::string path("/Anaina/v0/Register");
   std::ostream request_stream(&request_);
@@ -225,6 +231,18 @@ void client::build_http_header(std::string server_ip, std::string json)
   request_stream << "Connection: close\r\n\r\n";  //NOTE THE Double line feed                                                                                                                             
   request_stream << json;
 }
+
+
+void client::build_http_get_header(std::string server_ip, std::string json)
+{
+  std::ostream request_stream(&request_);
+
+  request_stream << "GET "  << cpath << " HTTP/1.1 \r\n";
+  request_stream << "Host:"  << servr << "\r\n";
+  request_stream << "Accept: */*\r\n";
+  request_stream << "Connection: close\r\n\r\n";  //NOTE THE Double line feed                                                              
+}
+
 
 std::string client::get_reg_json(void)
 {

@@ -14,7 +14,7 @@
 #include <string>
 #include <sstream>
 using boost::asio::ip::tcp;
-enum class xtype {registration=1, get_manifest};
+enum class xtype {registration=1, get_manifest, download};
 class client
 {
   private:
@@ -46,7 +46,8 @@ class client
   void handle_read_status_line(const boost::system::error_code& err);
   void handle_read_headers(const boost::system::error_code& err, size_t bytes_transferred);
   void handle_read_content(const boost::system::error_code& err, size_t bytes_transferred);
-  void build_http_header(std::string server_ip, std::string json);
+  void build_http_post_header(std::string server_ip, std::string json);
+  void build_http_get_header(std::string server_ip, std::string json);
   std::string get_reg_json(void);
   std::string get_req_json(void);
 
@@ -58,6 +59,12 @@ class client
     {
       return cpath;
     }
+
+  boost::asio::streambuf& get_raw_response_strm(void)
+    {
+      return response_;
+    }
+
 
 };
 #endif
