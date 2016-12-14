@@ -41,11 +41,11 @@ int install_cache(std::string json)
 	  std::cout<< "video streams: " << json_object_to_json_string_ext(lobj, 0 ) << " type " 
 		   << json_object_get_type(lobj) <<std::endl;
 	  json_object *str = json_object_object_get(lobj,"url");
-	  std::cout << "str 1 " << json_object_get_string(str) << std::endl;
+	  std::cout << "str 1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << json_object_get_string(str) << std::endl;
 	  downloader(str, 1);
-	  str = json_object_object_get(lobj,"thumbFile");
-	  std::cout << "str 2" << json_object_get_string(str) << std::endl;
-	  downloader(str, 2);
+	  //json_object *str2 = json_object_object_get(lobj,"thumbFile");
+	  //std::cout << "str 2" << json_object_get_string(str2) << std::endl;
+	  //downloader(str2, 2);
 	}
     }
   //std::stringstream ss;
@@ -68,7 +68,7 @@ static int downloader(json_object *str, int file_type)
   std::string path;
   std::string domain;
   parse_url(json_object_get_string(str), domain, path);
-  
+  std::cout << "next download" << std::endl;
   boost::asio::io_service io_service;
   boost::asio::ip::tcp::resolver resolver(io_service);
   boost::asio::ip::tcp::resolver::query query(domain, "443");
@@ -82,12 +82,17 @@ static int downloader(json_object *str, int file_type)
   io_service.run();
   if(file_type == 1)
     {
+      boost::asio::streambuf hold;
       std::ofstream outfile("tester.mp4", std::ios::out | std::ios::app | std::ios::binary);
+      std::cout << "writing type 1 " << (c.get_raw_response_strm()).size() << std::endl;
+      //hold << c.get_raw_response_strm();
       outfile << &(c.get_raw_response_strm());
+      //outfile << &hold;
     }
   if(file_type == 2)
     {
       std::ofstream outfile("tester.jpg", std::ios::out | std::ios::app | std::ios::binary);
+      std::cout << "writing type 2" << std::endl; 
       outfile << &(c.get_raw_response_strm());
     }
   

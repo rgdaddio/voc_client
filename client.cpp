@@ -14,7 +14,8 @@ client::client(boost::asio::io_service& io_service, boost::asio::ssl::context& c
     pubkey(public_key),
     servr(server),
     citerator(endpoint_iterator),
-    cpath(path)
+    cpath(path),
+    ltype(type)
   {
     // Form the request. We specify the "Connection: close" header so that the
     // server will close the socket after transmitting the response. This will
@@ -103,7 +104,7 @@ void client::handle_connect(const boost::system::error_code& err)
       }
     else
       {
-	std::cout << "Error: " << err.message() << "\n";
+	std::cout << "Handle connect Error: " << err.message() << "\n";
       }
   }
 
@@ -118,7 +119,7 @@ void client::handle_write_request(const boost::system::error_code& err)
       }
     else
       {
-	std::cout << "Error: " << err.message() << "\n";
+	std::cout << "handle write Error: " << err.message() << "\n";
       }
   }
 
@@ -156,7 +157,7 @@ void client::handle_read_status_line(const boost::system::error_code& err)
       }
     else
       {
-	std::cout << "d Error: " << err << "\n";
+	std::cout << "status line d Error: " << err << "\n";
       }
   }
 
@@ -173,7 +174,7 @@ void client::handle_read_headers(const boost::system::error_code& err, size_t by
 	
 
 	// Write whatever content we already have to output.
-	if (response_.size() > 0)
+	if (response_.size() > 0 && ltype != xtype::download)
 	  {
 	    sline << &response_;
 	    cjson = sline.str();
@@ -194,8 +195,11 @@ void client::handle_read_headers(const boost::system::error_code& err, size_t by
 
 void client::handle_read_content(const boost::system::error_code& err, size_t bytes_transferred)
   {
-    sline << &response_;
-    cjson = sline.str();
+    if(ltype != xtype::download)
+      {
+	sline << &response_;
+	cjson = sline.str();
+      }
     
     if(bytes_transferred != 0)
       {

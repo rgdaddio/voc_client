@@ -30,7 +30,7 @@ class client
   std::string cjson;
   std::string cpath;
   std::ostringstream sline;
-  
+  xtype ltype;
   
   public:
   client(boost::asio::io_service& io_service, boost::asio::ssl::context& context,
