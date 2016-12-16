@@ -3,12 +3,8 @@
 #include <string>      
 #include <iostream>  
 #include <sstream> 
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
 #include <boost/regex.hpp>
 
-//using boost::property_tree::ptree;
-namespace pt = boost::property_tree;
 static int downloader(json_object *str, int file_type);
 static void parse_url(const std::string& url, std::string& domain, std::string& path, std::string& proto);
 
@@ -38,7 +34,7 @@ int install_cache(std::string json)
       bool status = json_object_object_get_ex(lobj, "streams", &objtor);
       for(int i = 0; i < json_object_array_length(objtor); i++)
 	{
-	  if(i ==1)//just grab the first one for now
+	  if(i == 1)//just grab the first one for now FIXME
 	    break;
 	  json_object *pobj = json_object_array_get_idx(objtor, i);
 	  std::cout<< "video streams: " << json_object_to_json_string_ext(pobj, 0 ) << " type " 
@@ -46,26 +42,11 @@ int install_cache(std::string json)
 	  json_object *str = json_object_object_get(pobj,"url");
 	  std::cout << "str 1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << json_object_get_string(str) << std::endl;
 	  downloader(str, 1);
-	  //json_object *str2 = json_object_object_get(lobj,"thumbFile");
-	  //std::cout << "str 2" << json_object_get_string(str2) << std::endl;
-	  //downloader(str2, 2);
 	}
       status = json_object_object_get_ex(lobj, "thumbFile", &objtor);
       downloader(objtor, 2);
     }
   
-  //std::stringstream ss;
-  //ss.str(json);
-  //pt::ptree root;
-  //pt::read_json(ss, root);
-  //pt::const_iterator iter;
-
-  //std::string v = pt.get<std::string>("file");
-  //ptree::const_iterator end = pt.end();
-  //for(pt::const_iterator iter = pt::begin(); iter != pt::end(); iter++)
-  //  {
-  //    std::cout << iter->first << "," << iter->second.data() << std::endl;
-  //  }
   return 0;
 }
 
@@ -77,39 +58,14 @@ static int downloader(json_object *str, int file_type)
   std::string proto;
   parse_url(json_object_get_string(str), domain, path, proto);
   std::cout << "next download" << std::endl;
-  //boost::asio::io_service io_service;
-  //boost::asio::ip::tcp::resolver resolver(io_service);
-  //boost::asio::ip::tcp::resolver::query query(domain, "443");
-  //boost::asio::ip::tcp::resolver::iterator iterator = resolver.resolve(query);
-  //boost::asio::ssl::context context(boost::asio::ssl::context::sslv23);
   std::cout << "downloader domain: " << domain << " downloader path " << path << std::endl;
-  //xtype type = xtype::download;
-  //client c(io_service, context, iterator, domain, "test", "test", "test", path, type);
+
   std::cout << "object done!!!!!!!!!!!!!!!!" << std::endl;
   if(proto.compare("https") == 0)
     https_downloader(domain, path, file_type);
   if(proto.compare("http") == 0)
     http_downloader(domain, path, file_type);
-  //std::ofstream outfile;
-  //io_service.run();
-  //if(file_type == 1)
-  // {
-  //  boost::asio::streambuf hold;
-  //    std::ofstream outfile("tester.mp4", std::ios::out | std::ios::app | std::ios::binary);
-  //    std::cout << "writing type 1 " << (c.get_raw_response_strm()).size() << std::endl;
-      //hold << c.get_raw_response_strm();
-  //     outfile << &(c.get_raw_response_strm());
-      //outfile << &hold;
-  //  }
-  //if(file_type == 2)
-  //  {
-  //   std::ofstream outfile("tester.jpg", std::ios::out | std::ios::app | std::ios::binary);
-  //    std::cout << "writing type 2" << std::endl; 
-  //    outfile << &(c.get_raw_response_strm());
-  //  }
-  
-  //std::cout << "manifest: " << jstr << std::endl;
-
+  return 0;
 }
 
 

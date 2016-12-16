@@ -52,7 +52,7 @@ int register_user(std::string arv1, std::string arv2, std::string arv3, std::str
 
 int main(int argc, char* argv[])
 {
-  //try{
+  try{
 
     if (argc != 5)
       {
@@ -67,9 +67,9 @@ int main(int argc, char* argv[])
     else
       std::cout << "User is previously registered " << std::endl;
      
-    //}catch (std::exception& e){
-    // std::cerr << "Exception: " << e.what() << "\n";
-    // }
+  }catch (std::exception& e){
+    std::cerr << "Caught input Exception: " << e.what() << "\n";
+  }
 
  while(1)
    {
