@@ -360,6 +360,47 @@ int creat_user_table_entry(sqlite3 *db, std::string jstr, std::string server)
   //std::cout << "sql stmt: " << sqlstatement << std::endl;
 }
 
+int creat_cache_table_entry(sqlite3 *db, std::string jstr)
+{
+  std::string userId = "test"; //remove
+  std::string password = "test"; //remove
+  std::string tnull = "NULL";
+  int dummy = 0;
+  
+
+  json_object *new_obj = json_tokener_parse(jstr.c_str()); //the manifest is a json array
+  std::string sqlstatement =
+    "INSERT INTO cache_manifest (my_row, local_file, local_thumbnail, local_nfo, video_size, thumbnail_size, download_date, content_provider, category, unique_id, summary, title, duration,\
+timestamp, sdk_metadata, streams, ad_server_url, tags, priority, object_type, thumb_attrs, object_attrs, children, policy_name, key_server_url) VALUES\
+ ("
+    + quotesqlint(tnull.c_str()) + ","
+    //+ quotesql(userId.c_str()) + ","
+    //+ quotesql(password.c_str()) + ","
+    + quotesql((get_local_file(new_obj)).c_str()) + ","
+    + quotesql((get_local_thumb_file(new_obj)).c_str()) + ","
+    + quotesql((get_local_nfo(new_obj)).c_str()) + ","
+    + quotesqlint((get_video_size(new_obj)).c_str()) +
+    //+ quotesqlint((get_thumb_size(new_obj)).c_str()) + ","
+    //+ quotesql((get_access_token(new_obj)).c_str()) + ","
+    //+ quotesql((get_refresh_token(new_obj)).c_str()) + ","
+    //+ quotesql((get_voc_id(new_obj)).c_str()) + ","
+    //+ quotesql((get_congestion_detection(new_obj)).c_str()) + ","
+    //+ quotesql((get_ads_frequency(new_obj)).c_str()) + ","
+    //+ quotesql((get_daily_download_quota(new_obj)).c_str()) + ","
+    //+ quotesqlint((get_daily_download_manifest(new_obj)).c_str()) + ","
+    //+ quotesqlint((get_daily_download_wifi(new_obj)).c_str()) + ","
+    //+ quotesqlint((get_daily_download_cellular(new_obj)).c_str()) + ","
+    //+ quotesql((get_sdk_capabilities(new_obj)).c_str()) + ","
+    //+ quotesqlint((get_max_content_duration(new_obj)).c_str()) + ","
+    //+ quotesql((get_play_ads(new_obj)).c_str()) + ","
+    //+ quotesql((get_skip_policy(new_obj)).c_str()) + ","
+    //+ quotesql((get_tod_policy(new_obj)).c_str()) + ","
+    //+ quotesqlint((get_token_expiration(new_obj)).c_str()) + ","
+    //+ quotesql(server.c_str()) + ","
+    //+ quotesql((get_server_state(new_obj)).c_str()) +
+    ");";
+  insert_voc_table(db, sqlstatement);
+}
 
 std::string get_voc_user_json(sqlite3 *db, std::string stmt)
 {
@@ -412,3 +453,4 @@ std::map<std::string, std::string> get_voc_access_vals(sqlite3 *db)
   std::map::const_iterator pos = map.find("access_token");
 #endif
 }
+

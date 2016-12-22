@@ -199,3 +199,106 @@ std::string get_registration_json(void)
   return oss.str();
 }
 #endif
+
+std::string get_local_file(json_object *j) //j is an array object
+{
+  std::string err = "error";
+  for(int i = 0; i < json_object_array_length(j); i++)
+    {
+      json_object *lobj = json_object_array_get_idx(j, i);
+      std::cout << "in cache loop " << std::endl;
+      json_object *objtor;
+      bool status = json_object_object_get_ex(lobj, "streams", &objtor);
+      for(int i = 0; i < json_object_array_length(objtor); i++)
+	{
+	  if(i == 1)//just grab the first one for now FIXME
+	    break;
+	  json_object *pobj = json_object_array_get_idx(objtor, i);
+	  std::cout<< "video streams: " << json_object_to_json_string_ext(pobj, 0 ) << " type " 
+		   << json_object_get_type(pobj) <<std::endl;
+	  json_object *str = json_object_object_get(pobj,"url");
+	  std::cout << "str 1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << json_object_get_string(str) << std::endl;
+	  return json_object_get_string(str);
+	  //downloader(str, 1); need this but not now
+	}
+    }
+}
+
+std::string get_local_thumb_file(json_object *j) //j is an array object
+{
+  
+  std::string err = "error";
+  
+  for(int i = 0; i < json_object_array_length(j); i++)
+    {
+      json_object *lobj = json_object_array_get_idx(j, i);
+      std::cout << "in cache loop " << std::endl;
+      json_object *objtor;
+      bool status;
+      if((status = json_object_object_get_ex(lobj, "thumbFile", &objtor)))
+	{
+	  return json_object_get_string(objtor);
+	}  
+    }
+  return err;
+}
+
+std::string get_local_nfo(json_object *j)
+{
+  std::string err = "not done";
+  return err;
+}
+
+
+std::string get_video_size(json_object *j)
+{
+  int rc;
+  std::stringstream s;
+  int test = 0xdeadbeef;
+  std::string err = "error";
+#if 0 //tbd  
+  for(int i = 0; i < json_object_array_length(j); i++)
+    {
+      json_object *lobj = json_object_array_get_idx(j, i);
+      std::cout << "in cache loop " << std::endl;
+      json_object *objtor;
+      bool status;
+      if((status = json_object_object_get_ex(lobj, "thumbFile", &objtor)))
+	{
+	  return json_object_get_string(objtor);
+	}  
+    }
+  return err;
+}
+#endif
+#if 0
+  json_object *tmp = json_object_object_get_ex(j, "dailyDownloadWifi");
+  if(!tmp)
+    return 0;
+#endif
+  s << test;
+  return s.str();
+}
+
+std::string get_thumb_size(json_object *j)
+{
+  int rc;
+  std::stringstream s;
+  std::string err = "error";
+
+  for(int i = 0; i < json_object_array_length(j); i++)
+    {
+      json_object *lobj = json_object_array_get_idx(j, i);
+      std::cout << "in cache loop " << std::endl;
+      json_object *objtor;
+      bool status;
+      if((status = json_object_object_get_ex(lobj, "thumbSize", &objtor)))
+	{
+	  s << json_object_get_int(objtor);
+	  return s.str();
+	}  
+    }
+  return err;
+}
+
+
