@@ -12,7 +12,7 @@ std::map<std::string, std::string> manifest_processing(void)
 {
   sqlite3 *db = open_voc_db();
   std::map<std::string, std::string> message = get_voc_access_vals(db);
-  std::cout << "manifest processing" << std::cout;
+  std::cout << "manifest processing" << std::endl;
   //system("generate_voc_html.py");
   close_voc_db(db);
   return message;
@@ -35,6 +35,7 @@ int install_cache(std::string json)
       std::cout << "in cache loop " << std::endl;
       json_object *objtor;
       bool status = json_object_object_get_ex(lobj, "streams", &objtor);
+      std::cout << "Stream status: " << status << std::endl; 
       for(int i = 0; i < json_object_array_length(objtor); i++)
 	{
 	  if(i == 1)//just grab the first one for now FIXME

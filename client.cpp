@@ -8,12 +8,12 @@ client::client(boost::asio::io_service& io_service, boost::asio::ssl::context& c
 	       boost::asio::ip::tcp::resolver::iterator endpoint_iterator, std::string server,std::string schema_name,
 	       std::string tenant_id, std::string public_key, std::string path, xtype type)
   : socket_(io_service, context),
+    citerator(endpoint_iterator),
     resolver_(io_service),
     schma(schema_name),
     tenant(tenant_id),
     pubkey(public_key),
     servr(server),
-    citerator(endpoint_iterator),
     cpath(path),
     ltype(type)
   {

@@ -7,18 +7,19 @@
 sqlite3 *open_voc_db(void)
 {
   sqlite3 *db;
-  char *zErrMsg = 0;
+  //char *zErrMsg = 0;
   int rc;
   
   rc = sqlite3_open("voc_client.db", &db);
   
   if( rc ){
     fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
-    NULL;
+    return NULL;
   }else{
     fprintf(stderr, "Opened database successfully\n");
     return db;
   }
+  return NULL;
 }
 
 
@@ -328,7 +329,6 @@ int creat_user_table_entry(sqlite3 *db, std::string jstr, std::string server)
   std::string userId = "test";
   std::string password = "test";
   std::string tnull = "NULL";
-  int dummy = 0;
 
   std::string sqlstatement =
     "INSERT INTO voc_user (my_row, userid, password, device_id, platform, device_type, access_token, refresh_token, voc_id, congestion_detection, ads_frequency, daily_quota, daily_manifest, daily_download_wifi, daily_download_cellular, sdk_capabilities, max_content_duration, play_ads, skip_policy_first_time, tod_policy, token_expiration, server, server_state) VALUES ("
@@ -358,6 +358,7 @@ int creat_user_table_entry(sqlite3 *db, std::string jstr, std::string server)
     ");";
   insert_voc_table(db, sqlstatement);
   //std::cout << "sql stmt: " << sqlstatement << std::endl;
+  return 0;
 }
 
 int creat_cache_table_entry(sqlite3 *db, std::string jstr)
@@ -365,8 +366,6 @@ int creat_cache_table_entry(sqlite3 *db, std::string jstr)
   std::string userId = "test"; //remove
   std::string password = "test"; //remove
   std::string tnull = "NULL";
-  int dummy = 0;
-  
 
   json_object *new_obj = json_tokener_parse(jstr.c_str()); //the manifest is a json array
   std::string sqlstatement =
@@ -379,8 +378,8 @@ timestamp, sdk_metadata, streams, ad_server_url, tags, priority, object_type, th
     + quotesql((get_local_file(new_obj)).c_str()) + ","
     + quotesql((get_local_thumb_file(new_obj)).c_str()) + ","
     + quotesql((get_local_nfo(new_obj)).c_str()) + ","
-    + quotesqlint((get_video_size(new_obj)).c_str()) +
-    //+ quotesqlint((get_thumb_size(new_obj)).c_str()) + ","
+    + quotesqlint((get_video_size(new_obj)).c_str()) + ","
+    + quotesqlint((get_thumb_size(new_obj)).c_str()) +
     //+ quotesql((get_access_token(new_obj)).c_str()) + ","
     //+ quotesql((get_refresh_token(new_obj)).c_str()) + ","
     //+ quotesql((get_voc_id(new_obj)).c_str()) + ","
@@ -400,6 +399,7 @@ timestamp, sdk_metadata, streams, ad_server_url, tags, priority, object_type, th
     //+ quotesql((get_server_state(new_obj)).c_str()) +
     ");";
   insert_voc_table(db, sqlstatement);
+  return 0;
 }
 
 std::string get_voc_user_json(sqlite3 *db, std::string stmt)

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <boost/uuid/sha1.hpp>
 //json-c interface file
 
 //TEST JSON-c
@@ -22,6 +23,23 @@ bool quotsqlbool(bool b)
   return b;
 }
 
+std::string get_sha1(const std::string& str)
+{
+  boost::uuids::detail::sha1 sha1;
+  sha1.process_bytes(str.data(), str.size());
+  unsigned hash[5] = {0};
+  sha1.get_digest(hash);
+
+  // Back to string                                                                                                                                    
+  char buf[41] = {0};
+
+  for (int i = 0; i < 5; i++)
+    {
+      std::sprintf(buf + (i << 3), "%08x", hash[i]);
+    }
+
+  return std::string(buf);
+}
 
 std::string get_voc_id(json_object *j)
 {
@@ -92,7 +110,6 @@ std::string get_daily_download_quota(json_object *j)
 
 std::string get_daily_download_wifi(json_object *j)
 {
-  int rc;
   std::stringstream s;
   json_object *tmp = json_object_object_get(j, "dailyDownloadWifi");
   if(!tmp)
@@ -103,7 +120,6 @@ std::string get_daily_download_wifi(json_object *j)
 
 std::string get_daily_download_cellular(json_object *j)
 {
-  int rc;
   std::stringstream s;
   json_object *tmp = json_object_object_get(j, "dailyDownloadCellular");
   if(!tmp){
@@ -124,7 +140,6 @@ std::string get_sdk_capabilities(json_object *j)
 
 std::string get_daily_download_manifest(json_object *j)
 {
-  int rc;
   std::stringstream s;
   json_object *tmp = json_object_object_get(j, "dailyManifestCount");
   if(!tmp)
@@ -135,7 +150,6 @@ std::string get_daily_download_manifest(json_object *j)
 
 std::string get_max_content_duration(json_object *j)
 {
-  int rc;
   std::stringstream s;
   json_object *tmp = json_object_object_get(j, "maxContentDuration");
   if(!tmp)
@@ -168,7 +182,6 @@ std::string get_tod_policy(json_object *j)
 
 std::string get_token_expiration(json_object *j)
 {
-  int rc;
   std::stringstream s;
   json_object *tmp = json_object_object_get(j, "tokenExpiryDate");
   if(!tmp)
@@ -209,6 +222,7 @@ std::string get_local_file(json_object *j) //j is an array object
       std::cout << "in cache loop " << std::endl;
       json_object *objtor;
       bool status = json_object_object_get_ex(lobj, "streams", &objtor);
+      std::cout << "streams status: " << status << std::endl;
       for(int i = 0; i < json_object_array_length(objtor); i++)
 	{
 	  if(i == 1)//just grab the first one for now FIXME
@@ -222,6 +236,7 @@ std::string get_local_file(json_object *j) //j is an array object
 	  //downloader(str, 1); need this but not now
 	}
     }
+  return err;
 }
 
 std::string get_local_thumb_file(json_object *j) //j is an array object
@@ -252,7 +267,6 @@ std::string get_local_nfo(json_object *j)
 
 std::string get_video_size(json_object *j)
 {
-  int rc;
   std::stringstream s;
   int test = 0xdeadbeef;
   std::string err = "error";
@@ -282,7 +296,6 @@ std::string get_video_size(json_object *j)
 
 std::string get_thumb_size(json_object *j)
 {
-  int rc;
   std::stringstream s;
   std::string err = "error";
 
