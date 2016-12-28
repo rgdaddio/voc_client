@@ -34,7 +34,7 @@ int https_downloader(std::string domain, std::string path, int file_type, std::s
 {
 
   std::cout << "next download" << std::endl;
-
+  std::string media_path = "./cache/";
   boost::asio::io_service io_service;
   boost::asio::ip::tcp::resolver resolver(io_service);
   boost::asio::ip::tcp::resolver::query query(domain, "443");
@@ -66,6 +66,7 @@ int https_downloader(std::string domain, std::string path, int file_type, std::s
 int http_downloader(std::string domain, std::string path, int file_type, std::string suffix)
 {
   std::cout << "HTTP downloader called" << std::endl;
+  std::string media_path = "./cache/";
   boost::asio::io_service io_service;
   httpclient c(io_service, domain, path);
   io_service.run();
@@ -89,7 +90,7 @@ int http_downloader(std::string domain, std::string path, int file_type, std::st
 
 int downloader(json_object *str, int file_type, std::string suffix)
 {
-  boost::filesystem::path dir("./cache/");
+  boost::filesystem::path dir("./cache/"); //since standard c++ sucks about this.
   std::string path;
   std::string domain;
   std::string proto;
