@@ -5,8 +5,8 @@
 #include <sstream> 
 #include <boost/regex.hpp>
 
-static int downloader(json_object *str, int file_type);
-static void parse_url(const std::string& url, std::string& domain, std::string& path, std::string& proto);
+//int downloader(json_object *str, int file_type);
+void parse_url(const std::string& url, std::string& domain, std::string& path, std::string& proto);
 
 std::map<std::string, std::string> manifest_processing(void)
 {
@@ -45,16 +45,16 @@ int install_cache(std::string json)
 		   << json_object_get_type(pobj) <<std::endl;
 	  json_object *str = json_object_object_get(pobj,"url");
 	  std::cout << "str 1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << json_object_get_string(str) << std::endl;
-	  downloader(str, 1);
+	  //downloader(str, 1);
 	}
       status = json_object_object_get_ex(lobj, "thumbFile", &objtor);
-      downloader(objtor, 2);
+      //downloader(objtor, 2);
     }
   
   return 0;
 }
-
-static int downloader(json_object *str, int file_type)
+#if 0
+int downloader(json_object *str, int file_type)
 {
   
   std::string path;
@@ -71,9 +71,9 @@ static int downloader(json_object *str, int file_type)
     http_downloader(domain, path, file_type);
   return 0;
 }
-
-
-static void parse_url(const std::string& url, std::string& domain, std::string& path, std::string& proto)
+#endif
+#if 0
+void parse_url(const std::string& url, std::string& domain, std::string& path, std::string& proto)
 {
     boost::regex ex("(http|https)://([^/ :]+):?([^/ ]*)(/?[^ #?]*)\\x3f?([^ #]*)#?([^ ]*)");
     boost::cmatch what;
@@ -93,3 +93,4 @@ static void parse_url(const std::string& url, std::string& domain, std::string& 
       std::cout << "-------------------------------" << std::endl;
     }
 }
+#endif

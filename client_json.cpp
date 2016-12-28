@@ -1,5 +1,6 @@
 #include "client.h"
 #include "client_db.h"
+#include "client_downloader.h"
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -221,8 +222,11 @@ std::string get_local_file(json_object *j) //j is an array object
       json_object *lobj = json_object_array_get_idx(j, i);
       std::cout << "in cache loop " << std::endl;
       json_object *objtor;
-      bool status = json_object_object_get_ex(lobj, "streams", &objtor);
+      json_object *lfile;
+      bool status = json_object_object_get_ex(lobj, "streams", &objtor); //TBD check status
       std::cout << "streams status: " << status << std::endl;
+      status = json_object_object_get_ex(lobj, "uniqueId", &lfile); //TBD check status
+      std::cout << "unique Id: " << json_object_get_string(lfile) << std::endl;
       for(int i = 0; i < json_object_array_length(objtor); i++)
 	{
 	  if(i == 1)//just grab the first one for now FIXME
@@ -230,10 +234,13 @@ std::string get_local_file(json_object *j) //j is an array object
 	  json_object *pobj = json_object_array_get_idx(objtor, i);
 	  std::cout<< "video streams: " << json_object_to_json_string_ext(pobj, 0 ) << " type " 
 		   << json_object_get_type(pobj) <<std::endl;
+	  std::string local_file = get_sha1(json_object_get_string(lfile));
 	  json_object *str = json_object_object_get(pobj,"url");
 	  std::cout << "str 1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << json_object_get_string(str) << std::endl;
-	  return json_object_get_string(str);
-	  //downloader(str, 1); need this but not now
+	  //return json_object_get_string(str);
+	  std::cout << "sha local file: " << local_file + ".1" << std::endl;
+	  downloader(str, 1, local_file + ".1"); //need this but not now
+	  return (local_file + ".1");
 	}
     }
   return err;
@@ -249,10 +256,15 @@ std::string get_local_thumb_file(json_object *j) //j is an array object
       json_object *lobj = json_object_array_get_idx(j, i);
       std::cout << "in cache loop " << std::endl;
       json_object *objtor;
+      json_object *lfile;
       bool status;
       if((status = json_object_object_get_ex(lobj, "thumbFile", &objtor)))
 	{
-	  return json_object_get_string(objtor);
+	  status = json_object_object_get_ex(lobj, "uniqueId", &lfile);
+	  std::string local_thumb = json_object_get_string(lfile);
+	  downloader(objtor, 2, local_thumb + ".2");
+	  return (local_thumb + ".2"); 
+	  //return json_object_get_string(objtor);
 	}  
     }
   return err;
