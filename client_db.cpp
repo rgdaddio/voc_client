@@ -247,7 +247,7 @@ int create_cache_table(sqlite3 *db)
     "priority integer,"\
     "object_type text,"\
     "thumb_attrs text,"\
-    "objects_attrs text,"\
+    "object_attrs text,"\
     "children text,"\
     "policy_name text,"\
     "key_server_url text,"\
@@ -389,14 +389,16 @@ timestamp, sdk_metadata, streams, ad_server_url, tags, priority, object_type, th
     + quotesqlint((get_duration(new_obj)).c_str()) + ","
     + quotesqlint((get_time_stamp(new_obj)).c_str()) + ","
     + quotesql((get_sdk_metadata(new_obj)).c_str()) + ","
-    + quotesql((get_streams(new_obj)).c_str()) +
-    //+ quotesqlint((get_max_content_duration(new_obj)).c_str()) + ","
-    //+ quotesql((get_play_ads(new_obj)).c_str()) + ","
-    //+ quotesql((get_skip_policy(new_obj)).c_str()) + ","
-    //+ quotesql((get_tod_policy(new_obj)).c_str()) + ","
-    //+ quotesqlint((get_token_expiration(new_obj)).c_str()) + ","
-    //+ quotesql(server.c_str()) + ","
-    //+ quotesql((get_server_state(new_obj)).c_str()) +
+    + quotesql((get_streams(new_obj)).c_str()) + ","
+    + quotesql((get_adserver_url(new_obj)).c_str()) + ","
+    + quotesql((get_tags(new_obj)).c_str()) + "," 
+    + quotesqlint((get_priority(new_obj)).c_str()) + ","
+    + quotesql((get_object_type(new_obj)).c_str()) + ","
+    + quotesql((get_thumb_attribs(new_obj)).c_str()) + ","
+    + quotesql((get_object_attribs(new_obj)).c_str()) + ","
+    + quotesql((get_children(new_obj)).c_str()) + ","
+    + quotesql((get_policy_name(new_obj)).c_str()) + ","
+    + quotesql((get_key_server_url(new_obj)).c_str()) +
     ");";
   std::cout << "sql stmt: " << sqlstatement << std::endl;
   insert_voc_table(db, sqlstatement);

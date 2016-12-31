@@ -570,3 +570,165 @@ std::string get_streams(json_object *j) //j is an array object
     }
   return err;
 }
+
+std::string get_adserver_url(json_object *j) //j is an array object
+{
+
+  std::string err = "error";
+
+  for(int i = 0; i < json_object_array_length(j); i++)
+    {
+      json_object *lobj = json_object_array_get_idx(j, i);
+      json_object *objtor;
+      bool status;
+      if((status = json_object_object_get_ex(lobj, "adServerUrl", &objtor)))
+        {
+          return json_object_get_string(objtor);
+        }
+    }
+  return err;
+}
+
+std::string get_tags(json_object *j) //j is an array object
+{
+
+  std::string err = "error";
+
+  for(int i = 0; i < json_object_array_length(j); i++)
+    {
+      json_object *lobj = json_object_array_get_idx(j, i);
+      json_object *objtor;
+      bool status;
+      if((status = json_object_object_get_ex(lobj, "tags", &objtor)))
+        {
+          return json_object_get_string(objtor);
+        }
+    }
+  return err;
+}
+
+std::string get_priority(json_object *j) //j is an array object
+{
+
+  std::string err = "error";
+
+  for(int i = 0; i < json_object_array_length(j); i++)
+    {
+      json_object *lobj = json_object_array_get_idx(j, i);
+      json_object *objtor;
+      bool status;
+      if((status = json_object_object_get_ex(lobj, "priority", &objtor)))
+        {
+          return json_object_get_string(objtor);
+        }
+    }
+  return err;
+}
+
+std::string get_object_type(json_object *j) //j is an array object
+{
+
+  std::string err = "error";
+
+  for(int i = 0; i < json_object_array_length(j); i++)
+    {
+      json_object *lobj = json_object_array_get_idx(j, i);
+      json_object *objtor;
+      bool status;
+      if((status = json_object_object_get_ex(lobj, "objectType", &objtor)))
+	{
+          return json_object_get_string(objtor);
+        }
+    }
+  return err;
+}
+
+std::string get_thumb_attribs(json_object *j) //j is an array object
+{
+
+  std::string err = "error";
+
+  for(int i = 0; i < json_object_array_length(j); i++)
+    {
+      json_object *lobj = json_object_array_get_idx(j, i);
+      json_object *objtor;
+      bool status;
+      if((status = json_object_object_get_ex(lobj, "thumbAttrs", &objtor)))
+        {
+          return json_object_get_string(objtor);
+        }
+    }
+  return err;
+}
+
+std::string get_object_attribs(json_object *j) //j is an array object
+{
+
+  std::string err = "error";
+
+  for(int i = 0; i < json_object_array_length(j); i++)
+    {
+      json_object *lobj = json_object_array_get_idx(j, i);
+      json_object *objtor;
+      bool status;
+      if((status = json_object_object_get_ex(lobj, "objectAttrs", &objtor)))
+        {
+          return json_object_get_string(objtor);
+        }
+    }
+  return err;
+}
+
+std::string get_children(json_object *j) //j is an array object 
+{
+
+  std::string err = "error";
+
+  for(int i = 0; i < json_object_array_length(j); i++)
+    {
+      json_object *lobj = json_object_array_get_idx(j, i);
+      json_object *objtor;
+      bool status;
+      if((status = json_object_object_get_ex(lobj, "objectAttrs", &objtor)))
+        {
+          return json_object_get_string(objtor);
+        }
+    }
+  return err;
+}
+
+std::string get_policy_name(json_object *j) //j is an array object
+{
+
+  std::string err = "error";
+
+  for(int i = 0; i < json_object_array_length(j); i++)
+    {
+      json_object *lobj = json_object_array_get_idx(j, i);
+      json_object *objtor;
+      bool status;
+      if((status = json_object_object_get_ex(lobj, "policyName", &objtor)))
+        {
+          return json_object_get_string(objtor);
+        }
+    }
+  return err;
+}
+
+std::string get_key_server_url(json_object *j) //j is an array object 
+{
+
+  std::string err = "error";
+
+  for(int i = 0; i < json_object_array_length(j); i++)
+    {
+      json_object *lobj = json_object_array_get_idx(j, i);
+      json_object *objtor;
+      bool status;
+      if((status = json_object_object_get_ex(lobj, "keyServerUrl", &objtor)))
+        {
+          return json_object_get_string(objtor);
+        }
+    }
+  return err;
+}
