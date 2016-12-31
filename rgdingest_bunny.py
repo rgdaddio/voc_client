@@ -18,9 +18,9 @@ data = {
     "thumb_length": 11768, 
     "content_tags": [ ], 
     "thumb_height": "80", 
-    "content_description": "Big Buck Bunny!", 
+    "content_description": "For Bigger Escapes!", 
     "content_unique_id": "bbb-mp4", 
-    "content_title": "Big Buck Bunny", 
+    "content_title": "For Bigger Escapes", 
     "thumb_width": "80", 
     "content_expiration": None, 
     "long_lived": True, 
@@ -31,7 +31,7 @@ data = {
         {
             "url": "https://raw.githubusercontent.com/rgdaddio/voc_client/master/ForBiggerEscapes.mp4", 
             "type": "mp4", 
-            "size": "4139823",
+            "size": "2299653",
             "quality": '5'
         },
         {

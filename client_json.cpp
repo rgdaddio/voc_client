@@ -5,6 +5,7 @@
 #include <string>
 #include <sstream>
 #include <boost/uuid/sha1.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 //json-c interface file
 
 //TEST JSON-c
@@ -220,7 +221,6 @@ std::string get_local_file(json_object *j) //j is an array object
   for(int i = 0; i < json_object_array_length(j); i++)
     {
       json_object *lobj = json_object_array_get_idx(j, i);
-      std::cout << "in cache loop " << std::endl;
       json_object *objtor;
       json_object *lfile;
       bool status = json_object_object_get_ex(lobj, "streams", &objtor); //TBD check status
@@ -246,6 +246,45 @@ std::string get_local_file(json_object *j) //j is an array object
   return err;
 }
 
+std::string get_local_file_size(json_object *j)
+{
+  std::string err = "error";
+  for(int i = 0; i < json_object_array_length(j); i++)
+    {
+      json_object *lobj = json_object_array_get_idx(j, i);
+      std::cout << "in cache loop " << std::endl;
+      json_object *objtor;
+      json_object *lfile;
+      bool status = json_object_object_get_ex(lobj, "streams", &objtor); //TBD check status                                                 
+      std::cout << "streams status: " << status << std::endl;
+      status = json_object_object_get_ex(lobj, "uniqueId", &lfile); //TBD check status                                                      
+      std::cout << "unique Id: " << json_object_get_string(lfile) << std::endl;
+      for(int i = 0; i < json_object_array_length(objtor); i++)
+        {
+          //if(i == 1)//just grab the first one for now FIXME                                                                                 
+	  //break;
+          json_object *pobj = json_object_array_get_idx(objtor, i);
+	  std::cout<< "video streams: " << json_object_to_json_string_ext(pobj, 0 ) << " type "
+                   << json_object_get_type(pobj) <<std::endl;
+	  std::string local_file = get_sha1(json_object_get_string(lfile));
+          json_object *str; 
+	  if((status = json_object_object_get_ex(pobj,"size", &str)))
+	    {
+	      std::cout << "str 1 SIZZZZZZZE!!!!!!!!!!!!!!!!!" << json_object_get_string(str) << std::endl;
+	      return json_object_get_string(str);
+	    }                                                                                             
+	    //std::cout << "sha local file: " << local_file + ".1" << std::endl;
+	    //downloader(str, 1, local_file + ".1"); //need this but not now                                                                    
+	    //return (local_file + ".1");
+	}
+    }
+  return err;
+}
+  
+
+
+
+
 std::string get_local_thumb_file(json_object *j) //j is an array object
 {
   
@@ -254,7 +293,6 @@ std::string get_local_thumb_file(json_object *j) //j is an array object
   for(int i = 0; i < json_object_array_length(j); i++)
     {
       json_object *lobj = json_object_array_get_idx(j, i);
-      std::cout << "in cache loop " << std::endl;
       json_object *objtor;
       json_object *lfile;
       bool status;
@@ -286,7 +324,6 @@ std::string get_video_size(json_object *j)
   for(int i = 0; i < json_object_array_length(j); i++)
     {
       json_object *lobj = json_object_array_get_idx(j, i);
-      std::cout << "in cache loop " << std::endl;
       json_object *objtor;
       bool status;
       if((status = json_object_object_get_ex(lobj, "thumbFile", &objtor)))
@@ -314,7 +351,6 @@ std::string get_thumb_size(json_object *j)
   for(int i = 0; i < json_object_array_length(j); i++)
     {
       json_object *lobj = json_object_array_get_idx(j, i);
-      std::cout << "in cache loop " << std::endl;
       json_object *objtor;
       bool status;
       if((status = json_object_object_get_ex(lobj, "thumbSize", &objtor)))
@@ -326,4 +362,211 @@ std::string get_thumb_size(json_object *j)
   return err;
 }
 
+boost::posix_time::time_duration::tick_type milliseconds_since_epoch()
+{
+  using boost::gregorian::date;
+  using boost::posix_time::ptime;
+  using boost::posix_time::microsec_clock;
 
+  static ptime const epoch(date(1970, 1, 1));
+  return (microsec_clock::universal_time() - epoch).total_milliseconds();
+}
+
+
+std::string get_download_time()
+{
+  return std::to_string(milliseconds_since_epoch()/1000);
+}
+
+std::string get_content_provider(json_object *j) //j is an array object
+{
+
+  std::string err = "error";
+
+  for(int i = 0; i < json_object_array_length(j); i++)
+    {
+      json_object *lobj = json_object_array_get_idx(j, i);
+      json_object *objtor;
+      bool status;
+      if((status = json_object_object_get_ex(lobj, "provider", &objtor)))
+        {
+	  return json_object_get_string(objtor);                                                                                          
+        }
+    }
+  return err;
+}
+
+std::string get_category(json_object *j) //j is an array object 
+{
+
+  std::string err = "error";
+
+  for(int i = 0; i < json_object_array_length(j); i++)
+    {
+      json_object *lobj = json_object_array_get_idx(j, i);
+      json_object *objtor;
+      bool status;
+      if((status = json_object_object_get_ex(lobj, "catId", &objtor)))
+        {
+	  json_object *larr = json_object_array_get_idx(objtor, 0);
+	  std::cout << "category element " << json_object_get_string(larr) << std::endl; 
+	  return json_object_get_string(larr);
+	}
+    }
+  return err;
+}
+
+
+std::string get_unique_id(json_object *j) //j is an array object                                                                     
+{
+
+  std::string err = "error";
+
+  for(int i = 0; i < json_object_array_length(j); i++)
+    {
+      json_object *lobj = json_object_array_get_idx(j, i);
+      json_object *objtor;
+      bool status;
+      if((status = json_object_object_get_ex(lobj, "uniqueId", &objtor)))
+        {
+          return json_object_get_string(objtor);
+        }
+    }
+  return err;
+}
+
+std::string get_summary(json_object *j) //j is an array object
+{
+
+  std::string err = "error";
+
+  for(int i = 0; i < json_object_array_length(j); i++)
+    {
+      json_object *lobj = json_object_array_get_idx(j, i);
+      json_object *objtor;
+      bool status;
+      if((status = json_object_object_get_ex(lobj, "summary", &objtor)))
+        {
+          return json_object_get_string(objtor);
+        }
+    }
+  return err;
+}
+
+std::string get_title(json_object *j) //j is an array object
+{
+
+  std::string err = "error";
+
+  for(int i = 0; i < json_object_array_length(j); i++)
+    {
+      json_object *lobj = json_object_array_get_idx(j, i);
+      json_object *objtor;
+      bool status;
+      if((status = json_object_object_get_ex(lobj, "title", &objtor)))
+	{
+          return json_object_get_string(objtor);
+	}
+    }
+  return err;
+}
+
+std::string get_time_stamp(json_object *j) //j is an array object 
+{
+
+  std::string err = "error";
+
+  for(int i = 0; i < json_object_array_length(j); i++)
+    {
+      json_object *lobj = json_object_array_get_idx(j, i);
+      json_object *objtor;
+      bool status;
+      if((status = json_object_object_get_ex(lobj, "timeStamp", &objtor)))
+	{
+          return json_object_get_string(objtor);
+	}
+    }
+  return err;
+}
+
+static std::string parse_json_comma_list(std::string list, int item)
+{
+  std::string delimiter = "=";
+  size_t pos = 0;
+  std::string token;
+  int item_count = 0;
+  std::string err = "error";
+
+  while ((pos = list.find(delimiter)) != std::string::npos) {
+    token = list.substr(0, pos);
+    if(item_count == item){
+      std::cout << "json element token " << token << std::endl;
+      std::string sub_delimiter = ",";
+      size_t sub_pos = 0;
+      while((sub_pos = token.find(sub_delimiter)) != std::string::npos){
+	token.erase(sub_pos, sub_delimiter.length() + (token.length() - sub_pos));
+	std::cout << "json element value " << token << std::endl;
+	return token;
+      }
+    }
+    item_count++;
+    list.erase(0, pos + delimiter.length());
+  }
+  return err;
+}
+
+std::string get_duration(json_object *j)
+{
+  std::string err = "error";
+
+  for(int i = 0; i < json_object_array_length(j); i++)
+    {
+      json_object *lobj = json_object_array_get_idx(j, i);
+      json_object *objtor;
+      bool status;
+      if((status = json_object_object_get_ex(lobj, "objectAttrs", &objtor)))
+        {
+	  std::string attr = json_object_get_string(objtor);
+	  attr.erase(std::remove(attr.begin(), attr.end(), ','), attr.end());
+	  std::cout << "attr " << attr << std::endl;
+          return parse_json_comma_list(json_object_get_string(objtor), 1); //duration 1st item
+        }
+    }
+  return err;
+}
+
+std::string get_sdk_metadata(json_object *j) //j is an array object 
+{
+
+  std::string err = "error";
+
+  for(int i = 0; i < json_object_array_length(j); i++)
+    {
+      json_object *lobj = json_object_array_get_idx(j, i);
+      json_object *objtor;
+      bool status;
+      if((status = json_object_object_get_ex(lobj, "sdkMetadataPassthrough", &objtor)))
+        {
+          return json_object_get_string(objtor);
+        }
+    }
+  return err;
+}
+
+std::string get_streams(json_object *j) //j is an array object
+{
+
+  std::string err = "error";
+
+  for(int i = 0; i < json_object_array_length(j); i++)
+    {
+      json_object *lobj = json_object_array_get_idx(j, i);
+      json_object *objtor;
+      bool status;
+      if((status = json_object_object_get_ex(lobj, "streams", &objtor)))
+        {
+          return json_object_get_string(objtor);
+        }
+    }
+  return err;
+}

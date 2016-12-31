@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <map>
+#include <string>
+#include <boost/date_time/posix_time/posix_time.hpp>
 //sqalite interface file
 sqlite3 *open_voc_db(void)
 {
@@ -373,23 +375,21 @@ int creat_cache_table_entry(sqlite3 *db, std::string jstr)
 timestamp, sdk_metadata, streams, ad_server_url, tags, priority, object_type, thumb_attrs, object_attrs, children, policy_name, key_server_url) VALUES\
  ("
     + quotesqlint(tnull.c_str()) + ","
-    //+ quotesql(userId.c_str()) + ","
-    //+ quotesql(password.c_str()) + ","
     + quotesql((get_local_file(new_obj)).c_str()) + ","
     + quotesql((get_local_thumb_file(new_obj)).c_str()) + ","
     + quotesql((get_local_nfo(new_obj)).c_str()) + ","
-    + quotesqlint((get_video_size(new_obj)).c_str()) + ","
-    + quotesqlint((get_thumb_size(new_obj)).c_str()) +
-    //+ quotesql((get_access_token(new_obj)).c_str()) + ","
-    //+ quotesql((get_refresh_token(new_obj)).c_str()) + ","
-    //+ quotesql((get_voc_id(new_obj)).c_str()) + ","
-    //+ quotesql((get_congestion_detection(new_obj)).c_str()) + ","
-    //+ quotesql((get_ads_frequency(new_obj)).c_str()) + ","
-    //+ quotesql((get_daily_download_quota(new_obj)).c_str()) + ","
-    //+ quotesqlint((get_daily_download_manifest(new_obj)).c_str()) + ","
-    //+ quotesqlint((get_daily_download_wifi(new_obj)).c_str()) + ","
-    //+ quotesqlint((get_daily_download_cellular(new_obj)).c_str()) + ","
-    //+ quotesql((get_sdk_capabilities(new_obj)).c_str()) + ","
+    + quotesqlint((get_local_file_size(new_obj)).c_str()) + ","
+    + quotesqlint((get_thumb_size(new_obj)).c_str()) + "," 
+    + quotesqlint((get_download_time()).c_str()) + ","
+    + quotesql((get_content_provider(new_obj)).c_str()) + ","
+    + quotesql((get_category(new_obj)).c_str()) + ","
+    + quotesql((get_unique_id(new_obj)).c_str()) + ","
+    + quotesql((get_summary(new_obj)).c_str()) + ","
+    + quotesql((get_title(new_obj)).c_str()) + ","
+    + quotesqlint((get_duration(new_obj)).c_str()) + ","
+    + quotesqlint((get_time_stamp(new_obj)).c_str()) + ","
+    + quotesql((get_sdk_metadata(new_obj)).c_str()) + ","
+    + quotesql((get_streams(new_obj)).c_str()) +
     //+ quotesqlint((get_max_content_duration(new_obj)).c_str()) + ","
     //+ quotesql((get_play_ads(new_obj)).c_str()) + ","
     //+ quotesql((get_skip_policy(new_obj)).c_str()) + ","
@@ -398,6 +398,7 @@ timestamp, sdk_metadata, streams, ad_server_url, tags, priority, object_type, th
     //+ quotesql(server.c_str()) + ","
     //+ quotesql((get_server_state(new_obj)).c_str()) +
     ");";
+  std::cout << "sql stmt: " << sqlstatement << std::endl;
   insert_voc_table(db, sqlstatement);
   return 0;
 }
