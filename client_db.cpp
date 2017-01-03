@@ -36,11 +36,11 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName){
     std::map<std::string, std::string> used = *static_cast <std::map<std::string, std::string> *>(NotUsed);
 
   for(i=0; i<argc; i++){
-    printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
+    //printf("%s = %s\n", azColName[i], argv[i] ? argv[i] : "NULL");
     if(NotUsed)
       (*static_cast <std::map<std::string, std::string> *>(NotUsed)).insert(std::make_pair(azColName[i], argv[i] ? argv[i] : "NULL"));
   }
-  printf("%d\n\n", i);
+  //printf("%d\n\n", i);
   return 0;
 }
 
@@ -296,11 +296,12 @@ int select_voc_table(sqlite3 *db, std::string sql_stmt, bool ret=false)
   }else{
     fprintf(stdout, "User table select sucess\n");
   }
-
+#if 0
   for ( auto column : value_map )
     {
       std::cout  << column.first << " < " << column.second << ">" << std::endl;
-    }       
+    }
+#endif       
   if(value_map.empty())
     return 1;
   else 
@@ -400,7 +401,7 @@ timestamp, sdk_metadata, streams, ad_server_url, tags, priority, object_type, th
     + quotesql((get_policy_name(new_obj)).c_str()) + ","
     + quotesql((get_key_server_url(new_obj)).c_str()) +
     ");";
-  std::cout << "sql stmt: " << sqlstatement << std::endl;
+  //std::cout << "sql stmt: " << sqlstatement << std::endl;
   insert_voc_table(db, sqlstatement);
   return 0;
 }
@@ -412,7 +413,7 @@ std::string get_voc_user_json(sqlite3 *db, std::string stmt)
   std::string ustmt = "select device_id, platform, voc_id, access_token, refresh_token, server, server_state from voc_user";
   //std::string dstmt = "DELETE from voc_user where my_row='1';";
   rc = select_voc_table(db, stmt);
-  std::cout << "get_voc_user_json "<< rc << std::endl;
+  //std::cout << "get_voc_user_json "<< rc << std::endl;
   if(rc == -1)
     {
       std::cout << "table value1: " << rc << std::endl;
@@ -420,11 +421,11 @@ std::string get_voc_user_json(sqlite3 *db, std::string stmt)
     }
   
   //rc = select_voc_table(db, dstmt);
-  std::cout << "table valuex: " << rc << std::endl;
+  //std::cout << "table valuex: " << rc << std::endl;
   rc = select_voc_table(db, ustmt, true);
   if(rc)
     json.clear();
-  std::cout << "table value2: " << rc << std::endl;
+  //std::cout << "table value2: " << rc << std::endl;
   return json;
 }
 
@@ -434,18 +435,20 @@ std::map<std::string, std::string> get_voc_access_vals(sqlite3 *db)
   std::string ustmt = "select device_id, platform, voc_id, access_token, refresh_token, server, server_state from voc_user";
   std::map<std::string, std::string> re_map = select_voc_table_json(db, ustmt);
   
-  std::cout << "direct map "  << re_map["access_token"] << std::endl;
-
+  //std::cout << "direct map "  << re_map["access_token"] << std::endl;
+#if 0
   for ( auto column : re_map )
     {
-      std::cout  << column.first << " < " << column.second << ">" << std::endl;
+      //std::cout  << column.first << " < " << column.second << ">" << std::endl;
       if(column.second.compare("access_token"))
 	{
 	  std::cout<< "done wiht map" << std::endl;
 	  //return column.second;
 	}
     
-    } 
+    }
+#endif
+ 
   return re_map;
 #if 0
   if(re_map.find("access_token") == re_map.end())

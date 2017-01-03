@@ -224,24 +224,27 @@ std::string get_local_file(json_object *j) //j is an array object
       json_object *lobj = json_object_array_get_idx(j, i);
       json_object *objtor;
       json_object *lfile;
-      bool status = json_object_object_get_ex(lobj, "streams", &objtor); //TBD check status
-      std::cout << "streams status: " << status << std::endl;
-      status = json_object_object_get_ex(lobj, "uniqueId", &lfile); //TBD check status
-      std::cout << "unique Id: " << json_object_get_string(lfile) << std::endl;
+      bool status;
+      if(!(status = json_object_object_get_ex(lobj, "streams", &objtor))) //TBD check status
+	std::cout << "Unable to retrieve stream from db" << std::endl;
+      //std::cout << "streams status: " << status << std::endl;
+      if(!(status = json_object_object_get_ex(lobj, "uniqueId", &lfile))) //TBD check status
+	std::cout << "Unable to retrieve uniqueId from db" << std::endl;
+      //std::cout << "unique Id: " << json_object_get_string(lfile) << std::endl;
       for(int i = 0; i < json_object_array_length(objtor); i++)
 	{
 	  if(i == 1)//just grab the first one for now FIXME
 	    break;
 	  json_object *pobj = json_object_array_get_idx(objtor, i);
-	  std::cout<< "video streams: " << json_object_to_json_string_ext(pobj, 0 ) << " type " 
-		   << json_object_get_type(pobj) <<std::endl;
+	  //std::cout<< "video streams: " << json_object_to_json_string_ext(pobj, 0 ) << " type " 
+	  //	   << json_object_get_type(pobj) << std::endl;
 	  std::string local_file = get_sha1(json_object_get_string(lfile));
 	  json_object *str = json_object_object_get(pobj,"url");
-	  std::cout << "str 1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << json_object_get_string(str) << std::endl;
+	  //std::cout << "str 1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << json_object_get_string(str) << std::endl;
 	  //return json_object_get_string(str);
-	  std::cout << "sha local file: " << local_file + ".1" << std::endl;
+	  //std::cout << "sha local file: " << local_file + ".1" << std::endl;
 	  downloader(str, 1, local_file + ".1"); //need this but not now
-	  return (media_dir + local_file + ".1");
+	  return (local_file + ".1");
 	}
     }
   return err;
@@ -253,25 +256,25 @@ std::string get_local_file_size(json_object *j)
   for(int i = 0; i < json_object_array_length(j); i++)
     {
       json_object *lobj = json_object_array_get_idx(j, i);
-      std::cout << "in cache loop " << std::endl;
+      //std::cout << "in cache loop " << std::endl;
       json_object *objtor;
       json_object *lfile;
       bool status = json_object_object_get_ex(lobj, "streams", &objtor); //TBD check status                                                 
-      std::cout << "streams status: " << status << std::endl;
+      //std::cout << "streams status: " << status << std::endl;
       status = json_object_object_get_ex(lobj, "uniqueId", &lfile); //TBD check status                                                      
-      std::cout << "unique Id: " << json_object_get_string(lfile) << std::endl;
+      //std::cout << "unique Id: " << json_object_get_string(lfile) << std::endl;
       for(int i = 0; i < json_object_array_length(objtor); i++)
         {
           //if(i == 1)//just grab the first one for now FIXME                                                                                 
 	  //break;
           json_object *pobj = json_object_array_get_idx(objtor, i);
-	  std::cout<< "video streams: " << json_object_to_json_string_ext(pobj, 0 ) << " type "
-                   << json_object_get_type(pobj) <<std::endl;
+	  //std::cout<< "video streams: " << json_object_to_json_string_ext(pobj, 0 ) << " type "
+          //         << json_object_get_type(pobj) <<std::endl;
 	  std::string local_file = get_sha1(json_object_get_string(lfile));
           json_object *str; 
 	  if((status = json_object_object_get_ex(pobj,"size", &str)))
 	    {
-	      std::cout << "str 1 SIZZZZZZZE!!!!!!!!!!!!!!!!!" << json_object_get_string(str) << std::endl;
+	      //std::cout << "str 1 SIZZZZZZZE!!!!!!!!!!!!!!!!!" << json_object_get_string(str) << std::endl;
 	      return json_object_get_string(str);
 	    }                                                                                             
 	    //std::cout << "sha local file: " << local_file + ".1" << std::endl;
@@ -302,7 +305,7 @@ std::string get_local_thumb_file(json_object *j) //j is an array object
 	  status = json_object_object_get_ex(lobj, "uniqueId", &lfile);
 	  std::string local_thumb = json_object_get_string(lfile);
 	  downloader(objtor, 2, local_thumb + ".2");
-	  return (media_dir + local_thumb + ".2"); 
+	  return (local_thumb + ".2"); 
 	  //return json_object_get_string(objtor);
 	}  
     }
@@ -410,7 +413,7 @@ std::string get_category(json_object *j) //j is an array object
       if((status = json_object_object_get_ex(lobj, "catId", &objtor)))
         {
 	  json_object *larr = json_object_array_get_idx(objtor, 0);
-	  std::cout << "category element " << json_object_get_string(larr) << std::endl; 
+	  //std::cout << "category element " << json_object_get_string(larr) << std::endl; 
 	  return json_object_get_string(larr);
 	}
     }
@@ -501,12 +504,12 @@ static std::string parse_json_comma_list(std::string list, int item)
   while ((pos = list.find(delimiter)) != std::string::npos) {
     token = list.substr(0, pos);
     if(item_count == item){
-      std::cout << "json element token " << token << std::endl;
+      //std::cout << "json element token " << token << std::endl;
       std::string sub_delimiter = ",";
       size_t sub_pos = 0;
       while((sub_pos = token.find(sub_delimiter)) != std::string::npos){
 	token.erase(sub_pos, sub_delimiter.length() + (token.length() - sub_pos));
-	std::cout << "json element value " << token << std::endl;
+	//std::cout << "json element value " << token << std::endl;
 	return token;
       }
     }
@@ -529,7 +532,7 @@ std::string get_duration(json_object *j)
         {
 	  std::string attr = json_object_get_string(objtor);
 	  attr.erase(std::remove(attr.begin(), attr.end(), ','), attr.end());
-	  std::cout << "attr " << attr << std::endl;
+	  //std::cout << "attr " << attr << std::endl;
           return parse_json_comma_list(json_object_get_string(objtor), 1); //duration 1st item
         }
     }

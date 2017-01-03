@@ -50,7 +50,7 @@ bool client::verify_certificate(bool preverified, boost::asio::ssl::verify_conte
     char subject_name[256];
     X509* cert = X509_STORE_CTX_get_current_cert(ctx.native_handle());
     X509_NAME_oneline(X509_get_subject_name(cert), subject_name, 256);
-    std::cout << "Verifying:\n" << subject_name << std::endl;
+    //std::cout << "Verifying:\n" << subject_name << std::endl;
     
     //return preverified;                                                                                                   
     return true;
@@ -170,7 +170,7 @@ void client::handle_read_headers(const boost::system::error_code& err, size_t by
 	std::istream response_stream(&response_);
 	std::string header;
 	while (std::getline(response_stream, header) && header != "\r")
-	  std::cout << header << "\n\n";
+	  std::cout << "header " << header << "\n\n";
 	
 
 	// Write whatever content we already have to output.
@@ -250,14 +250,14 @@ void client::build_http_get_header(std::string server_ip, std::string json)
 
 std::string client::get_reg_json(void)
 {
-  std::cout << "get reg json" << std::endl; 
+  //std::cout << "get reg json" << std::endl; 
 
   std::ostringstream oss;
   oss << "{" << "\"serverState\"" << ":" << "{" << "\"schemaName\"" << ":" << "\"" << schma << "\"" << "," << "\"tenantId\"" ":" 
       << "\""<< tenant << "\"" << "}" << "," << "\"publicKey\"" << ":" << "\"" << pubkey << "\"" << "," << "\"platform\"" ":" "\"linux\"" 
       << "," << "\"deviceId\"" ":" << "\"623bce38-a1f4-11e6-bb6c-3417eb9985a6\"" << "," << "\"deviceType\"" << ":" << "\"pc\"" 
       << "," << "\"pushToken\"" << ":" << "\"tt\"" << "," << "\"version\"" << ":" << "\"17.2.3\"""}";    
-  std::cout << "strnew: " << oss.str() << std::endl;
+  //std::cout << "strnew: " << oss.str() << std::endl;
   return oss.str();
 }
 
@@ -271,6 +271,6 @@ std::string client::get_req_json(void)
       << "\""<< tenant << "\"" << "}" << "," << "\"vocId\"" << ":" << "\"" << json["voc_id"]  << "\"" << "," << "\"platform\"" ":" "\"linux\"" 
       << "," << "\"deviceId\"" ":" << "\"623bce38-a1f4-11e6-bb6c-3417eb9985a6\"" << "," << "\"deviceType\"" << ":" << "\"pc\"" 
       << "," << "\"refreshToken\"" << ":" << "\"" << json["refresh_token"] << "\"" << "," << "\"accessToken\"" << ":" << "\"" << json["access_token"] << "\"" << "," << "\"version\"" << ":" << "\"17.2.3\"""}";    
-  std::cout << "strnew: " << oss.str() << std::endl;
+  //std::cout << "strnew: " << oss.str() << std::endl;
   return oss.str();
 }

@@ -20,7 +20,7 @@ int handle_registration_json(std::string jstr, std::string server)
       //std::string json  =  get_voc_user_json(db, testtable);
       //if(json.empty())
       //  {
-      std::cout << "server: " << server << " jstr: " << jstr << std::endl; 
+      //std::cout << "server: " << server << " jstr: " << jstr << std::endl; 
       rc = creat_user_table_entry(db, jstr, server);
       // }      
       //else

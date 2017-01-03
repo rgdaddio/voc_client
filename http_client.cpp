@@ -158,14 +158,7 @@ void httpclient::handle_read_content(const boost::system::error_code& err)
 {
   if (!err)
     {
-      // Write all of the data that has been read so far.
-      //std::cout << &response_;
-      //std::cout << *(boost::asio::buffer_cast<const char*>( response_.data()));
-      //std::ofstream outfile( "test.mp4", std::ios::out | std::ios::app | std::ios::binary );
-      //outfile << boost::asio::buffer_cast<const char*>( response_.data() );
-      //std::cout << "writing the file" << std::endl; 
-      //outfile << &response_;
-      //std::cout << "done with write" << std::endl;
+
       // Continue reading remaining data until EOF.
       boost::asio::async_read(socket_, response_,
 			      boost::asio::transfer_at_least(1),
@@ -178,14 +171,3 @@ void httpclient::handle_read_content(const boost::system::error_code& err)
     }
 }
 
-#if 0
-void httpclient::build_http_get_header(std::string server_ip, std::string json)
-{
-  std::ostream request_stream(&request_);
-
-  request_stream << "GET "  << cpath << " HTTP/1.1 \r\n";
-  request_stream << "Host:"  << servr << "\r\n";
-  request_stream << "Accept: */*\r\n";
-  request_stream << "Connection: close\r\n\r\n";  //NOTE THE Double line feed                                                              
-}
-#endif

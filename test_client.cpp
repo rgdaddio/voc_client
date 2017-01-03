@@ -8,9 +8,8 @@
 
 int get_manifest_from_server(std::string arv1, std::string arv2, std::string arv3, std::string arv4)
 {
-  std::cout << "get manifest called" << std::endl;
-  boost::asio::io_service io_service;
   
+  boost::asio::io_service io_service;
   boost::asio::ip::tcp::resolver resolver(io_service);
   boost::asio::ip::tcp::resolver::query query(arv1, "443");
   boost::asio::ip::tcp::resolver::iterator iterator = resolver.resolve(query);
@@ -22,7 +21,7 @@ int get_manifest_from_server(std::string arv1, std::string arv2, std::string arv
   io_service.run();
   
   std::string jstr = c.get_response_json();
-  std::cout << "manifest: " << jstr << std::endl;
+  //std::cout << "manifest: " << jstr << std::endl; //DEBUG
   if(!jstr.empty())
     install_cache(jstr);
   return 0;
@@ -46,7 +45,7 @@ int register_user(std::string arv1, std::string arv2, std::string arv3, std::str
 
   handle_registration_json(jstr, arv1);
 
-  std::cout << "Registration DONE" << std::endl;
+  //std::cout << "Registration DONE" << std::endl; //DEBUG
   return 0;
 }
 
@@ -59,9 +58,9 @@ int main(int argc, char* argv[])
 	std::cout << "Usage: client <server> <schemaName> <tenantId> <publicKey>\n";
 	return 1;
       }
-    std::cout << " Server " << argv[1] << std::endl;
+    //std::cout << " Server " << argv[1] << std::endl;
     std::string user = validate_user_for_registration();
-    std::cout << "user!! " << user << std::endl;
+    //std::cout << "user!! " << user << std::endl;
     if(user.empty())
       register_user(argv[1], argv[2], argv[3], argv[4]);
     else
@@ -73,15 +72,15 @@ int main(int argc, char* argv[])
 
  while(1)
    {
-     std::cout << "cacheFill [y/n] " << std::endl;
+     std::cout << "Options: <cacheFill> " << std::endl;
      std::string mani = "cacheFill";
      std::string val;
      std::getline(std::cin,val);
-     
-     if(val.compare(0,6, "cacheFill"))
+     //std::cout << "val!!!!!!!!!!!!!!!!!!!!!!!!! " << val << std::endl;
+     if(val.compare("cacheFill") == 0)
        get_manifest_from_server(argv[1], argv[2], argv[3], argv[4]);
      else
-       std::cout << "mani " << val << std::endl;
+       std::cout << "Unknown Option " << val << std::endl;
    }
  return 0;
 }
