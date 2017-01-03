@@ -218,6 +218,7 @@ std::string get_registration_json(void)
 std::string get_local_file(json_object *j) //j is an array object
 {
   std::string err = "error";
+  std::string media_dir = "./cache/"; //FIXME should pass this to downloader
   for(int i = 0; i < json_object_array_length(j); i++)
     {
       json_object *lobj = json_object_array_get_idx(j, i);
@@ -240,7 +241,7 @@ std::string get_local_file(json_object *j) //j is an array object
 	  //return json_object_get_string(str);
 	  std::cout << "sha local file: " << local_file + ".1" << std::endl;
 	  downloader(str, 1, local_file + ".1"); //need this but not now
-	  return (local_file + ".1");
+	  return (media_dir + local_file + ".1");
 	}
     }
   return err;
@@ -289,7 +290,7 @@ std::string get_local_thumb_file(json_object *j) //j is an array object
 {
   
   std::string err = "error";
-  
+  std::string media_dir = "./cache/"; //FIXME should be passed to downloader.
   for(int i = 0; i < json_object_array_length(j); i++)
     {
       json_object *lobj = json_object_array_get_idx(j, i);
@@ -301,7 +302,7 @@ std::string get_local_thumb_file(json_object *j) //j is an array object
 	  status = json_object_object_get_ex(lobj, "uniqueId", &lfile);
 	  std::string local_thumb = json_object_get_string(lfile);
 	  downloader(objtor, 2, local_thumb + ".2");
-	  return (local_thumb + ".2"); 
+	  return (media_dir + local_thumb + ".2"); 
 	  //return json_object_get_string(objtor);
 	}  
     }
