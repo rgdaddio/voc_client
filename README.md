@@ -16,4 +16,4 @@ make
 client \<server\> \<schema name\> \<tenant_id\> \<public key\><br>
 
 //To test<br>
-/<path-to-browser/>//<yourbrowser/> test//voc.html<br>
+/<path-to-browser/>/<yourbrowser/> test/voc.html<br>
