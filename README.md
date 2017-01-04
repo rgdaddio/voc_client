@@ -15,8 +15,14 @@ make
 //To run and register<br>
 client \<server\> \<schema name\> \<tenant_id\> \<public key\><br>
 
+//Run ingester in the sub directory "test"<br>
+test/test_ingest.py<br>
+
 //To fill the cache type as the option<br>
 cacheFill<br>
+
+//To exit<br>
+^C<br>
 
 //To test<br>
 \<path-to-browser\>/\<yourbrowser\> test/voc.html<br>

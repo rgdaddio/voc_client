@@ -5,7 +5,10 @@
 #include <map>
 #include <string>
 #include <boost/date_time/posix_time/posix_time.hpp>
+//
 //sqalite interface file
+//Maintained 'c' style for portability to basic 'c' implementations
+//
 sqlite3 *open_voc_db(void)
 {
   sqlite3 *db;
@@ -296,17 +299,12 @@ int select_voc_table(sqlite3 *db, std::string sql_stmt, bool ret=false)
   }else{
     fprintf(stdout, "User table select sucess\n");
   }
-#if 0
-  for ( auto column : value_map )
-    {
-      std::cout  << column.first << " < " << column.second << ">" << std::endl;
-    }
-#endif       
+
   if(value_map.empty())
     return 1;
   else 
     return 0;
-
+  
 }
 
 std::map<std::string, std::string> select_voc_table_json(sqlite3 *db, std::string sql_stmt)
@@ -413,19 +411,16 @@ std::string get_voc_user_json(sqlite3 *db, std::string stmt)
   std::string ustmt = "select device_id, platform, voc_id, access_token, refresh_token, server, server_state from voc_user";
   //std::string dstmt = "DELETE from voc_user where my_row='1';";
   rc = select_voc_table(db, stmt);
-  //std::cout << "get_voc_user_json "<< rc << std::endl;
+
   if(rc == -1)
     {
       std::cout << "table value1: " << rc << std::endl;
       return json;
     }
   
-  //rc = select_voc_table(db, dstmt);
-  //std::cout << "table valuex: " << rc << std::endl;
   rc = select_voc_table(db, ustmt, true);
   if(rc)
     json.clear();
-  //std::cout << "table value2: " << rc << std::endl;
   return json;
 }
 
@@ -434,29 +429,7 @@ std::map<std::string, std::string> get_voc_access_vals(sqlite3 *db)
   std::string ret = "";
   std::string ustmt = "select device_id, platform, voc_id, access_token, refresh_token, server, server_state from voc_user";
   std::map<std::string, std::string> re_map = select_voc_table_json(db, ustmt);
-  
-  //std::cout << "direct map "  << re_map["access_token"] << std::endl;
-#if 0
-  for ( auto column : re_map )
-    {
-      //std::cout  << column.first << " < " << column.second << ">" << std::endl;
-      if(column.second.compare("access_token"))
-	{
-	  std::cout<< "done wiht map" << std::endl;
-	  //return column.second;
-	}
-    
-    }
-#endif
  
   return re_map;
-#if 0
-  if(re_map.find("access_token") == re_map.end())
-    return ret;
-  else
-    return (ret = re_map.second);
-
-  std::map::const_iterator pos = map.find("access_token");
-#endif
 }
 

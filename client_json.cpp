@@ -6,9 +6,12 @@
 #include <sstream>
 #include <boost/uuid/sha1.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
-//json-c interface file
 
-//TEST JSON-c
+//
+//
+//json-c interface file kept in 'c' style for portability
+//
+//
 
 std::string quotesql( const std::string& s ) 
 {
@@ -201,20 +204,6 @@ std::string get_server_state(json_object *j)
   return (rc = json_object_get_string(tmp));
 }
 
-
-#if 0
-std::string get_registration_json(void)
-{
-  std::ostringstream oss;
-  oss << "{" << "\"serverState\"" << ":" << "{" << "\"schemaName\"" << ":" << "\"" << schma << "\"" << "," << "\"tenantId\"" ":" 
-      << "\""<< tenant << "\"" << "}" << "," << "\"publicKey\"" << ":" << "\"" << pubkey << "\"" << "," << "\"platform\"" ":" "\"linux\"" 
-      << "," << "\"deviceId\"" ":" << "\"623bce38-a1f4-11e6-bb6c-3417eb9985a6\"" << "," << "\"deviceType\"" << ":" << "\"pc\"" 
-      << "," << "\"pushToken\"" << ":" << "\"tt\"" << "," << "\"version\"" << ":" << "\"17.2.3\"""}";    
-  std::cout << "str: " << oss.str() << std::endl;
-  return oss.str();
-}
-#endif
-
 std::string get_local_file(json_object *j) //j is an array object
 {
   std::string err = "error";
@@ -227,22 +216,18 @@ std::string get_local_file(json_object *j) //j is an array object
       bool status;
       if(!(status = json_object_object_get_ex(lobj, "streams", &objtor))) //TBD check status
 	std::cout << "Unable to retrieve stream from db" << std::endl;
-      //std::cout << "streams status: " << status << std::endl;
+
       if(!(status = json_object_object_get_ex(lobj, "uniqueId", &lfile))) //TBD check status
 	std::cout << "Unable to retrieve uniqueId from db" << std::endl;
-      //std::cout << "unique Id: " << json_object_get_string(lfile) << std::endl;
+
       for(int i = 0; i < json_object_array_length(objtor); i++)
 	{
 	  if(i == 1)//just grab the first one for now FIXME
 	    break;
 	  json_object *pobj = json_object_array_get_idx(objtor, i);
-	  //std::cout<< "video streams: " << json_object_to_json_string_ext(pobj, 0 ) << " type " 
-	  //	   << json_object_get_type(pobj) << std::endl;
 	  std::string local_file = get_sha1(json_object_get_string(lfile));
 	  json_object *str = json_object_object_get(pobj,"url");
-	  //std::cout << "str 1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << json_object_get_string(str) << std::endl;
-	  //return json_object_get_string(str);
-	  //std::cout << "sha local file: " << local_file + ".1" << std::endl;
+
 	  downloader(str, 1, local_file + ".1"); //need this but not now
 	  return (local_file + ".1");
 	}
@@ -256,42 +241,28 @@ std::string get_local_file_size(json_object *j)
   for(int i = 0; i < json_object_array_length(j); i++)
     {
       json_object *lobj = json_object_array_get_idx(j, i);
-      //std::cout << "in cache loop " << std::endl;
       json_object *objtor;
       json_object *lfile;
-      bool status = json_object_object_get_ex(lobj, "streams", &objtor); //TBD check status                                                 
-      //std::cout << "streams status: " << status << std::endl;
-      status = json_object_object_get_ex(lobj, "uniqueId", &lfile); //TBD check status                                                      
-      //std::cout << "unique Id: " << json_object_get_string(lfile) << std::endl;
+      bool status = json_object_object_get_ex(lobj, "streams", &objtor); //TBD check status         
+
+      status = json_object_object_get_ex(lobj, "uniqueId", &lfile); //TBD check status
+      
       for(int i = 0; i < json_object_array_length(objtor); i++)
         {
-          //if(i == 1)//just grab the first one for now FIXME                                                                                 
-	  //break;
-          json_object *pobj = json_object_array_get_idx(objtor, i);
-	  //std::cout<< "video streams: " << json_object_to_json_string_ext(pobj, 0 ) << " type "
-          //         << json_object_get_type(pobj) <<std::endl;
+	  json_object *pobj = json_object_array_get_idx(objtor, i);
 	  std::string local_file = get_sha1(json_object_get_string(lfile));
           json_object *str; 
 	  if((status = json_object_object_get_ex(pobj,"size", &str)))
 	    {
-	      //std::cout << "str 1 SIZZZZZZZE!!!!!!!!!!!!!!!!!" << json_object_get_string(str) << std::endl;
 	      return json_object_get_string(str);
 	    }                                                                                             
-	    //std::cout << "sha local file: " << local_file + ".1" << std::endl;
-	    //downloader(str, 1, local_file + ".1"); //need this but not now                                                                    
-	    //return (local_file + ".1");
 	}
     }
   return err;
 }
-  
-
-
-
 
 std::string get_local_thumb_file(json_object *j) //j is an array object
 {
-  
   std::string err = "error";
   std::string media_dir = "test/cache/"; //FIXME should be passed to downloader.
   for(int i = 0; i < json_object_array_length(j); i++)
@@ -306,7 +277,6 @@ std::string get_local_thumb_file(json_object *j) //j is an array object
 	  std::string local_thumb = json_object_get_string(lfile);
 	  downloader(objtor, 2, local_thumb + ".2");
 	  return (local_thumb + ".2"); 
-	  //return json_object_get_string(objtor);
 	}  
     }
   return err;
@@ -316,35 +286,6 @@ std::string get_local_nfo(json_object *j)
 {
   std::string err = "not done";
   return err;
-}
-
-
-std::string get_video_size(json_object *j)
-{
-  std::stringstream s;
-  int test = 0xdeadbeef;
-  std::string err = "error";
-#if 0 //tbd  
-  for(int i = 0; i < json_object_array_length(j); i++)
-    {
-      json_object *lobj = json_object_array_get_idx(j, i);
-      json_object *objtor;
-      bool status;
-      if((status = json_object_object_get_ex(lobj, "thumbFile", &objtor)))
-	{
-	  return json_object_get_string(objtor);
-	}  
-    }
-  return err;
-}
-#endif
-#if 0
-  json_object *tmp = json_object_object_get_ex(j, "dailyDownloadWifi");
-  if(!tmp)
-    return 0;
-#endif
-  s << test;
-  return s.str();
 }
 
 std::string get_thumb_size(json_object *j)
@@ -413,17 +354,14 @@ std::string get_category(json_object *j) //j is an array object
       if((status = json_object_object_get_ex(lobj, "catId", &objtor)))
         {
 	  json_object *larr = json_object_array_get_idx(objtor, 0);
-	  //std::cout << "category element " << json_object_get_string(larr) << std::endl; 
 	  return json_object_get_string(larr);
 	}
     }
   return err;
 }
 
-
-std::string get_unique_id(json_object *j) //j is an array object                                                                     
+std::string get_unique_id(json_object *j) //j is an array object  
 {
-
   std::string err = "error";
 
   for(int i = 0; i < json_object_array_length(j); i++)
@@ -441,7 +379,6 @@ std::string get_unique_id(json_object *j) //j is an array object
 
 std::string get_summary(json_object *j) //j is an array object
 {
-
   std::string err = "error";
 
   for(int i = 0; i < json_object_array_length(j); i++)
@@ -459,7 +396,6 @@ std::string get_summary(json_object *j) //j is an array object
 
 std::string get_title(json_object *j) //j is an array object
 {
-
   std::string err = "error";
 
   for(int i = 0; i < json_object_array_length(j); i++)
@@ -504,12 +440,10 @@ static std::string parse_json_comma_list(std::string list, int item)
   while ((pos = list.find(delimiter)) != std::string::npos) {
     token = list.substr(0, pos);
     if(item_count == item){
-      //std::cout << "json element token " << token << std::endl;
       std::string sub_delimiter = ",";
       size_t sub_pos = 0;
       while((sub_pos = token.find(sub_delimiter)) != std::string::npos){
 	token.erase(sub_pos, sub_delimiter.length() + (token.length() - sub_pos));
-	//std::cout << "json element value " << token << std::endl;
 	return token;
       }
     }
@@ -541,7 +475,6 @@ std::string get_duration(json_object *j)
 
 std::string get_sdk_metadata(json_object *j) //j is an array object 
 {
-
   std::string err = "error";
 
   for(int i = 0; i < json_object_array_length(j); i++)
@@ -559,7 +492,6 @@ std::string get_sdk_metadata(json_object *j) //j is an array object
 
 std::string get_streams(json_object *j) //j is an array object
 {
-
   std::string err = "error";
 
   for(int i = 0; i < json_object_array_length(j); i++)
@@ -577,7 +509,6 @@ std::string get_streams(json_object *j) //j is an array object
 
 std::string get_adserver_url(json_object *j) //j is an array object
 {
-
   std::string err = "error";
 
   for(int i = 0; i < json_object_array_length(j); i++)
@@ -595,7 +526,6 @@ std::string get_adserver_url(json_object *j) //j is an array object
 
 std::string get_tags(json_object *j) //j is an array object
 {
-
   std::string err = "error";
 
   for(int i = 0; i < json_object_array_length(j); i++)
@@ -613,7 +543,6 @@ std::string get_tags(json_object *j) //j is an array object
 
 std::string get_priority(json_object *j) //j is an array object
 {
-
   std::string err = "error";
 
   for(int i = 0; i < json_object_array_length(j); i++)
@@ -631,7 +560,6 @@ std::string get_priority(json_object *j) //j is an array object
 
 std::string get_object_type(json_object *j) //j is an array object
 {
-
   std::string err = "error";
 
   for(int i = 0; i < json_object_array_length(j); i++)
@@ -649,7 +577,6 @@ std::string get_object_type(json_object *j) //j is an array object
 
 std::string get_thumb_attribs(json_object *j) //j is an array object
 {
-
   std::string err = "error";
 
   for(int i = 0; i < json_object_array_length(j); i++)
@@ -667,7 +594,6 @@ std::string get_thumb_attribs(json_object *j) //j is an array object
 
 std::string get_object_attribs(json_object *j) //j is an array object
 {
-
   std::string err = "error";
 
   for(int i = 0; i < json_object_array_length(j); i++)
@@ -685,7 +611,6 @@ std::string get_object_attribs(json_object *j) //j is an array object
 
 std::string get_children(json_object *j) //j is an array object 
 {
-
   std::string err = "error";
 
   for(int i = 0; i < json_object_array_length(j); i++)
@@ -703,7 +628,6 @@ std::string get_children(json_object *j) //j is an array object
 
 std::string get_policy_name(json_object *j) //j is an array object
 {
-
   std::string err = "error";
 
   for(int i = 0; i < json_object_array_length(j); i++)
@@ -721,7 +645,6 @@ std::string get_policy_name(json_object *j) //j is an array object
 
 std::string get_key_server_url(json_object *j) //j is an array object 
 {
-
   std::string err = "error";
 
   for(int i = 0; i < json_object_array_length(j); i++)

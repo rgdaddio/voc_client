@@ -1,7 +1,18 @@
 #include "client.h"
 #include "client_manifest.h"
 #include<iostream>
-
+//
+//This is the primary interface to the boost asio system
+//for https/ssl.
+//
+//In a 'c' system these interfaces could be swapped out for
+//a more sockets based system or a messaging middleware package
+//like nanomsg.
+//
+//This handles both messaging and download https. 
+//In the future those should be seperated like the
+//http download module.
+//
 using boost::asio::ip::tcp;
 
 client::client(boost::asio::io_service& io_service, boost::asio::ssl::context& context,
@@ -37,13 +48,13 @@ client::client(boost::asio::io_service& io_service, boost::asio::ssl::context& c
     // into a list of endpoints.
     socket_.set_verify_mode(boost::asio::ssl::context::verify_peer);
     socket_.set_verify_callback(boost::bind(&client::verify_certificate, this, _1, _2));
-    tcp::resolver::query query(server, "443");
+    tcp::resolver::query query(server, "443"); //This could handle DNS if need be.
     resolver_.async_resolve(query,
 			    boost::bind(&client::handle_resolve, this,
 					boost::asio::placeholders::error));
   }
 
-
+//Currently by-passed we still use ssl but we don't do cert validation for now.
 bool client::verify_certificate(bool preverified, boost::asio::ssl::verify_context& ctx)
   {
     //JUST A DUMMY fOR NOW
@@ -170,8 +181,8 @@ void client::handle_read_headers(const boost::system::error_code& err, size_t by
 	std::istream response_stream(&response_);
 	std::string header;
 	while (std::getline(response_stream, header) && header != "\r")
-	  std::cout << "header " << header << "\n\n";
-	
+	  //std::cout << "header " << header << "\n\n";
+	  ;
 
 	// Write whatever content we already have to output.
 	if (response_.size() > 0 && ltype != xtype::download)

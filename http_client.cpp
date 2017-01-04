@@ -127,19 +127,14 @@ void httpclient::handle_read_headers(const boost::system::error_code& err)
       // Process the response headers.
       std::istream response_stream(&response_);
       std::string header;
-      //std::ofstream outfile ("new.mp4",std::ofstream::binary);
+
       while (std::getline(response_stream, header) && header != "\r")
-        std::cout << header << "size" << header.size() << "\n";
-      //std::cout << "\n";
-      
+        //std::cout << header << "size" << header.size() << "\n";
+	;
+
       // Write whatever content we already have to output.
       if (response_.size() > 0){
-        //std::cout << &response_ << "response size " << response_.size() << std::endl;
-	//std::ofstream outfile( "test.mp4", std::ios::out | std::ios::app | std::ios::binary );
-	//outfile << &response_;
-	//outfile << boost::asio::buffer_cast<const char*>( response_.data() );
-	std::cout << "writing response to file " << std::endl;
-	//outfile.write(response_, response_.size());
+      	std::cout << "writing response to file " << std::endl;
       } 
       
       // Start reading remaining data until EOF.

@@ -26,7 +26,6 @@ std::string get_server_state(json_object *j);
 std::string get_local_file(json_object *j);
 std::string get_local_thumbfile(json_object *j);
 std::string get_local_nfo(json_object *j);
-std::string get_video_size(json_object *j);
 std::string get_local_file_size(json_object *j);
 std::string get_local_thumb_file(json_object *j);
 std::string get_thumb_size(json_object *j);
