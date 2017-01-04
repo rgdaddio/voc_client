@@ -29,13 +29,13 @@ data = {
     "content_bit_rate": 1,
     "streams": [
         {
-            "url": "https://raw.githubusercontent.com/rgdaddio/voc_client/master/ForBiggerEscapes.mp4", 
+            "url": "https://raw.githubusercontent.com/rgdaddio/voc_client/master/test/ForBiggerEscapes.mp4", 
             "type": "mp4", 
             "size": "2299653",
             "quality": '5'
         },
         {
-            "url": "https://raw.githubusercontent.com/rgdaddio/voc_client/master/ForBiggerEscapes.mp4", 
+            "url": "https://raw.githubusercontent.com/rgdaddio/voc_client/master/test/ForBiggerEscapes.mp4", 
             "type": "mp4", 
             "size": "22718509",
             "quality": '10'

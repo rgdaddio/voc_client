@@ -16,14 +16,18 @@ int get_manifest_from_server(std::string arv1, std::string arv2, std::string arv
   boost::asio::ssl::context context(boost::asio::ssl::context::sslv23);
   std::string path = "/Anaina/v0/Download-Manifest";
   xtype type = xtype::get_manifest;
+  if(type == xtype::get_manifest)
+    std::cout << "valid type" << std::endl;
   client c(io_service, context, iterator, arv1, arv2, arv3, arv4, path, type);
 
   io_service.run();
   
   std::string jstr = c.get_response_json();
   //std::cout << "manifest: " << jstr << std::endl; //DEBUG
-  if(!jstr.empty())
+  if(!jstr.empty()){
     install_cache(jstr);
+    system("test/generate_voc_html.py"); //Create output file
+  }
   return 0;
 }
 

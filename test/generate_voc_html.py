@@ -6,13 +6,13 @@ import sqlite3
 import json
 import cgi
 
-conn = sqlite3.connect('../voc_client.db')
+conn = sqlite3.connect('voc_client.db')
 
 class html_generator:
 	conn = None
 	
 	def __init__(self):
-		self.conn = sqlite3.connect('../voc_client.db')
+		self.conn = sqlite3.connect('voc_client.db')
 		self.conn.row_factory = self.dict_factory
 		
 
@@ -63,14 +63,14 @@ class html_generator:
 		return(html)
 
 	def build_the_page(self):
-		with open('voc.html', 'w') as html_file:
+		with open('test/voc.html', 'w') as html_file:
 			html = self.build_content_view()
 			header = self.build_category_header()
 
-			html_file.write(open('beginning.html', 'r').read()+
+			html_file.write(open('test/beginning.html', 'r').read()+
 										header.encode('utf-8')+
-										open('header.html', 'r').read()+
-										html.encode('utf-8')+open('end.html', 'r').read())
+										open('test/header.html', 'r').read()+
+										html.encode('utf-8')+open('test/end.html', 'r').read())
 
 	
 if __name__ == "__main__":

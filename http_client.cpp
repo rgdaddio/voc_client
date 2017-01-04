@@ -104,7 +104,7 @@ void httpclient::handle_read_status_line(const boost::system::error_code& err)
 	}
       if (status_code != 200)
 	{
-	  std::cout << "Response returned with status code ";
+	  std::cout << "Response http returned with status code ";
 	  std::cout << status_code << "\n";
 	  return;
 	}

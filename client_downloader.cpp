@@ -33,18 +33,18 @@ void parse_url(const std::string& url, std::string& domain, std::string& path, s
 int https_downloader(std::string domain, std::string path, int file_type, std::string suffix)
 {
 
-  //std::cout << "next download" << std::endl;
-  std::string media_path = "./cache/";
+  std::cout << "next download" << std::endl;
+  std::string media_path = "test/cache/";
   boost::asio::io_service io_service;
   boost::asio::ip::tcp::resolver resolver(io_service);
   boost::asio::ip::tcp::resolver::query query(domain, "443");
   boost::asio::ip::tcp::resolver::iterator iterator = resolver.resolve(query);
   boost::asio::ssl::context context(boost::asio::ssl::context::sslv23);
 
-  //std::cout << "downloader domain: " << domain << " downloader path " << path << std::endl;
+  std::cout << "downloader domain: " << domain << " downloader path " << path << std::endl;
   xtype type = xtype::download;
   client c(io_service, context, iterator, domain, "test", "test", "test", path, type);
-  //std::cout << "object done!!!!!!!!!!!!!!!!" << std::endl;
+  std::cout << "object done!!!!!!!!!!!!!!!!" << std::endl;
 
   io_service.run();
   if(file_type == 1)
@@ -66,7 +66,7 @@ int https_downloader(std::string domain, std::string path, int file_type, std::s
 int http_downloader(std::string domain, std::string path, int file_type, std::string suffix)
 {
   //std::cout << "HTTP downloader called" << std::endl;
-  std::string media_path = "./cache/";
+  std::string media_path = "test/cache/";
   boost::asio::io_service io_service;
   httpclient c(io_service, domain, path);
   io_service.run();
@@ -90,7 +90,7 @@ int http_downloader(std::string domain, std::string path, int file_type, std::st
 
 int downloader(json_object *str, int file_type, std::string suffix)
 {
-  boost::filesystem::path dir("./cache/"); //since standard c++ sucks about this.
+  boost::filesystem::path dir("test/cache/"); //since standard c++ sucks about this.
   std::string path;
   std::string domain;
   std::string proto;

@@ -218,7 +218,7 @@ std::string get_registration_json(void)
 std::string get_local_file(json_object *j) //j is an array object
 {
   std::string err = "error";
-  std::string media_dir = "./cache/"; //FIXME should pass this to downloader
+  std::string media_dir = "test/cache/"; //FIXME should pass this to downloader
   for(int i = 0; i < json_object_array_length(j); i++)
     {
       json_object *lobj = json_object_array_get_idx(j, i);
@@ -293,7 +293,7 @@ std::string get_local_thumb_file(json_object *j) //j is an array object
 {
   
   std::string err = "error";
-  std::string media_dir = "./cache/"; //FIXME should be passed to downloader.
+  std::string media_dir = "test/cache/"; //FIXME should be passed to downloader.
   for(int i = 0; i < json_object_array_length(j); i++)
     {
       json_object *lobj = json_object_array_get_idx(j, i);
