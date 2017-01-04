@@ -1,5 +1,5 @@
 # voc_client<br>
-This is a c++ VOC refence client application.<br>
+This is a c++ VOC reference client application.<br>
 
 What does it do? It caches web content like the SDK.<br>
 
