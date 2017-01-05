@@ -13,7 +13,7 @@ sudo apt-get install libboost-filesystem-dev<br>>
 make
 
 //To run and register<br>
-client \<server\> \<schema name\> \<tenant_id\> \<public key\><br>
+client_app \<server\> \<schema name\> \<tenant_id\> \<public key\><br>
 
 //Run ingester in the sub directory "test"<br>
 test/test_ingest.py<br>
