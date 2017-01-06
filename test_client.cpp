@@ -29,6 +29,26 @@ int get_manifest_from_server(std::string arv1, std::string arv2, std::string arv
   return 0;
 }
 
+int hello_voc(std::string arv1, std::string arv2, std::string arv3, std::string arv4)
+{
+  boost::asio::io_service io_service;
+  boost::asio::ip::tcp::resolver resolver(io_service);
+  boost::asio::ip::tcp::resolver::query query(arv1, "443");
+  boost::asio::ip::tcp::resolver::iterator iterator = resolver.resolve(query);
+  boost::asio::ssl::context context(boost::asio::ssl::context::sslv23);
+  std::string path = "/Anaina/v0/HelloVoC";
+  xtype type = xtype::registration; // xtype::hello?
+  client c(io_service, context, iterator, arv1, arv2, arv3, arv4, path, type);
+
+  io_service.run();
+  
+  std::string jstr = c.get_response_json();
+
+  std::cout << jstr << std::endl; 
+
+  return 0;
+}
+
 int register_user(std::string arv1, std::string arv2, std::string arv3, std::string arv4)
 {
   boost::asio::io_service io_service;
@@ -71,15 +91,20 @@ int main(int argc, char* argv[])
 
  while(1)
    {
-     std::cout << "\nOptions: <cacheFill> <^C> " << std::endl; //Fixme add more features
+     std::cout << "\nOptions: <cacheFill> <hello> <^C> " << std::endl; //Fixme add more features
      std::string mani = "cacheFill";
      std::string val;
      std::getline(std::cin,val);
 
-     if(val.compare("cacheFill") == 0)
+     if(val.compare("cacheFill") == 0){
        get_manifest_from_server(argv[1], argv[2], argv[3], argv[4]);
-     else
+     } 
+     else if(val.compare("hello") == 0){
+        hello_voc(argv[1], argv[2], argv[3], argv[4]);
+     }
+    else{
        std::cout << "Unknown Option " << val << std::endl;
+    }
    }
  return 0;
 }
