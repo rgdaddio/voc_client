@@ -70,6 +70,14 @@ int get_topic_list(std::string arv1, std::string arv2, std::string arv3, std::st
   return 0;
 }
 
+int get_profile(std::string arv1, std::string arv2, std::string arv3, std::string arv4){
+  std::string path = "/Anaina/v0/profile";
+  xtype type = xtype::get_manifest; // xtype::provider_list?
+  std::string jstr = make_request(arv1, arv2, arv3, arv4, path, type);
+  std::cout << jstr << std::endl;
+  return 0;
+}
+
 int register_user(std::string arv1, std::string arv2, std::string arv3, std::string arv4)
 {
   boost::asio::io_service io_service;
@@ -112,7 +120,7 @@ int main(int argc, char* argv[])
 
  while(1)
    {
-     std::cout << "\nOptions: <cacheFill> <hello> <getProviderList> <getTopicList> <^C> " << std::endl; //Fixme add more features
+     std::cout << "\nOptions: <cacheFill> <hello> <getProviderList> <getTopicList> <getProfile> <^C> " << std::endl; //Fixme add more features
      std::string mani = "cacheFill";
      std::string val;
      std::getline(std::cin,val);
@@ -128,6 +136,9 @@ int main(int argc, char* argv[])
      }
      else if(val.compare("getTopicList") == 0){
         get_topic_list(argv[1], argv[2], argv[3], argv[4]);
+     }
+     else if(val.compare("getProfile") == 0){
+        get_profile(argv[1], argv[2], argv[3], argv[4]);
      }
     else{
        std::cout << "Unknown Option " << val << std::endl;
