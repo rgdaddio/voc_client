@@ -29,22 +29,35 @@ int get_manifest_from_server(std::string arv1, std::string arv2, std::string arv
   return 0;
 }
 
-int hello_voc(std::string arv1, std::string arv2, std::string arv3, std::string arv4)
-{
+std::string make_request(std::string ip_address,  std::string schema_name, 
+                std::string tenant_id, std::string sdk_key,
+                std::string path, xtype type){
+
   boost::asio::io_service io_service;
   boost::asio::ip::tcp::resolver resolver(io_service);
-  boost::asio::ip::tcp::resolver::query query(arv1, "443");
+  boost::asio::ip::tcp::resolver::query query(ip_address, "443");
   boost::asio::ip::tcp::resolver::iterator iterator = resolver.resolve(query);
   boost::asio::ssl::context context(boost::asio::ssl::context::sslv23);
-  std::string path = "/Anaina/v0/HelloVoC";
-  xtype type = xtype::registration; // xtype::hello?
-  client c(io_service, context, iterator, arv1, arv2, arv3, arv4, path, type);
+
+  client c(io_service, context, iterator, ip_address, schema_name, tenant_id, sdk_key, path, type);
 
   io_service.run();
   
   std::string jstr = c.get_response_json();
 
-  std::cout << jstr << std::endl; 
+  //std::cout << jstr << std::endl; 
+
+  return jstr;
+}
+
+int hello_voc(std::string arv1, std::string arv2, std::string arv3, std::string arv4)
+{
+  std::string path = "/Anaina/v0/HelloVoC";
+  xtype type = xtype::registration; // xtype::hello?
+
+  std::string jstr = make_request(arv1, arv2, arv3, arv4, path, type);
+
+  std::cout << jstr << std::endl;
 
   return 0;
 }
