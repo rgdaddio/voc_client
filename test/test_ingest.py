@@ -2,9 +2,9 @@
 import json
 import urllib2
 
-server = "23.79.234.154"
-provider = "hlstest"
-access_token = "hlstest"
+server = "23.79.234.237"
+provider = "hlstest3"
+access_token = "hlstest3"
 
 
 header =  {
@@ -15,7 +15,8 @@ header =  {
 data = {
     "content_provider_id": provider,
     "access_token": access_token, 
-    "thumb_length": 11768, 
+    "thumb_length": 11768,
+    "content_length": 2299653,
     "content_tags": [ ], 
     "thumb_height": "80", 
     "content_description": "For Bigger Escapes!", 

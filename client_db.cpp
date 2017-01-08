@@ -274,7 +274,7 @@ int insert_voc_table(sqlite3 *db, std::string sql_stmt)
   char *zErrMsg = 0;
   rc = sqlite3_exec(db, sql_stmt.c_str(), callback, 0, &zErrMsg);
   if(rc != SQLITE_OK){
-    fprintf(stderr, "SQL error: %s\n", zErrMsg);
+    fprintf(stderr, "SQL insert error: %s\n", zErrMsg);
     sqlite3_free(zErrMsg);
   }else{
     fprintf(stdout, "User table insert sucess\n");
@@ -399,7 +399,7 @@ timestamp, sdk_metadata, streams, ad_server_url, tags, priority, object_type, th
     + quotesql((get_policy_name(new_obj)).c_str()) + ","
     + quotesql((get_key_server_url(new_obj)).c_str()) +
     ");";
-  //std::cout << "sql stmt: " << sqlstatement << std::endl;
+  std::cout << "sql stmt: " << sqlstatement << std::endl;
   insert_voc_table(db, sqlstatement);
   return 0;
 }

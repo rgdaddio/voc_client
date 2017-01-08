@@ -325,9 +325,8 @@ std::string get_download_time()
 
 std::string get_content_provider(json_object *j) //j is an array object
 {
-
   std::string err = "error";
-
+  std::string empty = "null";
   for(int i = 0; i < json_object_array_length(j); i++)
     {
       json_object *lobj = json_object_array_get_idx(j, i);
@@ -335,6 +334,8 @@ std::string get_content_provider(json_object *j) //j is an array object
       bool status;
       if((status = json_object_object_get_ex(lobj, "provider", &objtor)))
         {
+	  if(json_object_get_type(objtor) == json_type_null)
+            return empty;
 	  return json_object_get_string(objtor);                                                                                          
         }
     }
@@ -363,7 +364,7 @@ std::string get_category(json_object *j) //j is an array object
 std::string get_unique_id(json_object *j) //j is an array object  
 {
   std::string err = "error";
-
+  std::string empty = "null";
   for(int i = 0; i < json_object_array_length(j); i++)
     {
       json_object *lobj = json_object_array_get_idx(j, i);
@@ -371,6 +372,8 @@ std::string get_unique_id(json_object *j) //j is an array object
       bool status;
       if((status = json_object_object_get_ex(lobj, "uniqueId", &objtor)))
         {
+	  if(json_object_get_type(objtor) == json_type_null)
+            return empty;
           return json_object_get_string(objtor);
         }
     }
@@ -380,7 +383,7 @@ std::string get_unique_id(json_object *j) //j is an array object
 std::string get_summary(json_object *j) //j is an array object
 {
   std::string err = "error";
-
+  std::string empty = "null";
   for(int i = 0; i < json_object_array_length(j); i++)
     {
       json_object *lobj = json_object_array_get_idx(j, i);
@@ -388,6 +391,8 @@ std::string get_summary(json_object *j) //j is an array object
       bool status;
       if((status = json_object_object_get_ex(lobj, "summary", &objtor)))
         {
+	  if(json_object_get_type(objtor) == json_type_null)
+            return empty;
           return json_object_get_string(objtor);
         }
     }
@@ -397,7 +402,7 @@ std::string get_summary(json_object *j) //j is an array object
 std::string get_title(json_object *j) //j is an array object
 {
   std::string err = "error";
-
+  std::string empty = "null";
   for(int i = 0; i < json_object_array_length(j); i++)
     {
       json_object *lobj = json_object_array_get_idx(j, i);
@@ -405,6 +410,8 @@ std::string get_title(json_object *j) //j is an array object
       bool status;
       if((status = json_object_object_get_ex(lobj, "title", &objtor)))
 	{
+	  if(json_object_get_type(objtor) == json_type_null)
+            return empty;
           return json_object_get_string(objtor);
 	}
     }
@@ -455,7 +462,7 @@ static std::string parse_json_comma_list(std::string list, int item)
 
 std::string get_duration(json_object *j)
 {
-  std::string err = "error";
+  std::string err = "10";
 
   for(int i = 0; i < json_object_array_length(j); i++)
     {
@@ -467,7 +474,12 @@ std::string get_duration(json_object *j)
 	  std::string attr = json_object_get_string(objtor);
 	  attr.erase(std::remove(attr.begin(), attr.end(), ','), attr.end());
 	  //std::cout << "attr " << attr << std::endl;
-          return parse_json_comma_list(json_object_get_string(objtor), 1); //duration 1st item
+          //return parse_json_comma_list(json_object_get_string(objtor), 1); //duration 1st item
+	  std::string dnld = parse_json_comma_list(json_object_get_string(objtor), 1);
+	  if((dnld.empty()) || (dnld.compare("null")) || dnld.compare("empty"))
+	    return err;
+	  else 
+	    return dnld;
         }
     }
   return err;
@@ -476,7 +488,7 @@ std::string get_duration(json_object *j)
 std::string get_sdk_metadata(json_object *j) //j is an array object 
 {
   std::string err = "error";
-
+  std::string empty = "null";
   for(int i = 0; i < json_object_array_length(j); i++)
     {
       json_object *lobj = json_object_array_get_idx(j, i);
@@ -484,6 +496,8 @@ std::string get_sdk_metadata(json_object *j) //j is an array object
       bool status;
       if((status = json_object_object_get_ex(lobj, "sdkMetadataPassthrough", &objtor)))
         {
+	  if(json_object_get_type(objtor) == json_type_null)
+              return empty;
           return json_object_get_string(objtor);
         }
     }
@@ -493,7 +507,7 @@ std::string get_sdk_metadata(json_object *j) //j is an array object
 std::string get_streams(json_object *j) //j is an array object
 {
   std::string err = "error";
-
+  std::string empty = "null";
   for(int i = 0; i < json_object_array_length(j); i++)
     {
       json_object *lobj = json_object_array_get_idx(j, i);
@@ -501,6 +515,10 @@ std::string get_streams(json_object *j) //j is an array object
       bool status;
       if((status = json_object_object_get_ex(lobj, "streams", &objtor)))
         {
+	  if(json_object_get_type(objtor) == json_type_null)
+            {
+	      return empty;
+	    }
           return json_object_get_string(objtor);
         }
     }
@@ -509,8 +527,9 @@ std::string get_streams(json_object *j) //j is an array object
 
 std::string get_adserver_url(json_object *j) //j is an array object
 {
+  std::stringstream s;
   std::string err = "error";
-
+  std::string empty = "null";
   for(int i = 0; i < json_object_array_length(j); i++)
     {
       json_object *lobj = json_object_array_get_idx(j, i);
@@ -518,6 +537,16 @@ std::string get_adserver_url(json_object *j) //j is an array object
       bool status;
       if((status = json_object_object_get_ex(lobj, "adServerUrl", &objtor)))
         {
+	  if(json_object_get_type(objtor) == json_type_null)
+            {
+	      //return json_type_to_name(json_type_null);                                                            
+              //s << json_type_to_name(json_type_null);
+	      //std::cout << "type to name " << s.str() << std::endl;
+	      //std::string test = s.str();
+              //return s.str();
+	      return empty;
+            }
+	  std::cout << "adserv: " << json_object_get_type(objtor) << std::endl;
           return json_object_get_string(objtor);
         }
     }
@@ -527,7 +556,8 @@ std::string get_adserver_url(json_object *j) //j is an array object
 std::string get_tags(json_object *j) //j is an array object
 {
   std::string err = "error";
-
+  std::string empty = "null";
+  std::stringstream s;
   for(int i = 0; i < json_object_array_length(j); i++)
     {
       json_object *lobj = json_object_array_get_idx(j, i);
@@ -535,6 +565,15 @@ std::string get_tags(json_object *j) //j is an array object
       bool status;
       if((status = json_object_object_get_ex(lobj, "tags", &objtor)))
         {
+	  if(json_object_get_type(objtor) == json_type_null)
+	    {
+            //return json_type_to_name(json_type_null);
+	    //  s << json_type_to_name(json_type_null);
+	    //  std::cout << "type to name " << s.str() << std::endl;
+	    //  return s.str();
+	      return empty;
+	    }
+	  std::cout << "TYPE!!!!!!!!! " << json_object_get_type(objtor) << std::endl;
           return json_object_get_string(objtor);
         }
     }
@@ -543,8 +582,10 @@ std::string get_tags(json_object *j) //j is an array object
 
 std::string get_priority(json_object *j) //j is an array object
 {
+  std::stringstream s;
   std::string err = "error";
-
+  std::string empty = "null";
+  std::cout << "OBJ LEN IN PRI!!!!!!: " << json_object_array_length(j) << std::endl;
   for(int i = 0; i < json_object_array_length(j); i++)
     {
       json_object *lobj = json_object_array_get_idx(j, i);
@@ -552,16 +593,25 @@ std::string get_priority(json_object *j) //j is an array object
       bool status;
       if((status = json_object_object_get_ex(lobj, "priority", &objtor)))
         {
+	  //std::cout << "PRIORITY FOUND!!!!!!!!!!!!!!!!!" << json_object_get_int(objtor)<<std::endl;
+	  if(json_object_get_type(objtor) == json_type_null)
+            {
+	      return empty;
+            }
           return json_object_get_string(objtor);
-        }
+	  //s << json_object_get_int(objtor);
+	  //std::cout << "print it " << s.str() << std::endl;
+          //return s.str();
+	}
     }
   return err;
 }
 
 std::string get_object_type(json_object *j) //j is an array object
 {
+  std::string empty = "null";
   std::string err = "error";
-
+  std::cout << "IN TYPE!!!!!!!!" << std::endl;
   for(int i = 0; i < json_object_array_length(j); i++)
     {
       json_object *lobj = json_object_array_get_idx(j, i);
@@ -569,6 +619,8 @@ std::string get_object_type(json_object *j) //j is an array object
       bool status;
       if((status = json_object_object_get_ex(lobj, "objectType", &objtor)))
 	{
+	  if(json_object_get_type(objtor) == json_type_null)
+	    return empty;
           return json_object_get_string(objtor);
         }
     }
@@ -578,7 +630,7 @@ std::string get_object_type(json_object *j) //j is an array object
 std::string get_thumb_attribs(json_object *j) //j is an array object
 {
   std::string err = "error";
-
+  std::string empty = "null";
   for(int i = 0; i < json_object_array_length(j); i++)
     {
       json_object *lobj = json_object_array_get_idx(j, i);
@@ -586,6 +638,8 @@ std::string get_thumb_attribs(json_object *j) //j is an array object
       bool status;
       if((status = json_object_object_get_ex(lobj, "thumbAttrs", &objtor)))
         {
+	  if(json_object_get_type(objtor) == json_type_null)
+            return empty;
           return json_object_get_string(objtor);
         }
     }
@@ -595,7 +649,7 @@ std::string get_thumb_attribs(json_object *j) //j is an array object
 std::string get_object_attribs(json_object *j) //j is an array object
 {
   std::string err = "error";
-
+  std::string empty = "null";
   for(int i = 0; i < json_object_array_length(j); i++)
     {
       json_object *lobj = json_object_array_get_idx(j, i);
@@ -603,6 +657,8 @@ std::string get_object_attribs(json_object *j) //j is an array object
       bool status;
       if((status = json_object_object_get_ex(lobj, "objectAttrs", &objtor)))
         {
+	  if(json_object_get_type(objtor) == json_type_null)
+            return empty;
           return json_object_get_string(objtor);
         }
     }
@@ -612,14 +668,16 @@ std::string get_object_attribs(json_object *j) //j is an array object
 std::string get_children(json_object *j) //j is an array object 
 {
   std::string err = "error";
-
+  std::string empty = "null";
   for(int i = 0; i < json_object_array_length(j); i++)
     {
       json_object *lobj = json_object_array_get_idx(j, i);
       json_object *objtor;
       bool status;
-      if((status = json_object_object_get_ex(lobj, "objectAttrs", &objtor)))
+      if((status = json_object_object_get_ex(lobj, "children", &objtor)))
         {
+	  if(json_object_get_type(objtor) == json_type_null)
+            return empty;
           return json_object_get_string(objtor);
         }
     }
@@ -629,7 +687,7 @@ std::string get_children(json_object *j) //j is an array object
 std::string get_policy_name(json_object *j) //j is an array object
 {
   std::string err = "error";
-
+  std::string empty = "null";
   for(int i = 0; i < json_object_array_length(j); i++)
     {
       json_object *lobj = json_object_array_get_idx(j, i);
@@ -637,6 +695,8 @@ std::string get_policy_name(json_object *j) //j is an array object
       bool status;
       if((status = json_object_object_get_ex(lobj, "policyName", &objtor)))
         {
+	  if(json_object_get_type(objtor) == json_type_null)
+            return empty;
           return json_object_get_string(objtor);
         }
     }
@@ -646,7 +706,7 @@ std::string get_policy_name(json_object *j) //j is an array object
 std::string get_key_server_url(json_object *j) //j is an array object 
 {
   std::string err = "error";
-
+  std::string empty = "null";
   for(int i = 0; i < json_object_array_length(j); i++)
     {
       json_object *lobj = json_object_array_get_idx(j, i);
@@ -654,6 +714,8 @@ std::string get_key_server_url(json_object *j) //j is an array object
       bool status;
       if((status = json_object_object_get_ex(lobj, "keyServerUrl", &objtor)))
         {
+	  if(json_object_get_type(objtor) == json_type_null)
+            return empty;
           return json_object_get_string(objtor);
         }
     }

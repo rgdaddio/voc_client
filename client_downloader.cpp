@@ -3,6 +3,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <thread>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
 #include <boost/regex.hpp>
@@ -95,8 +96,16 @@ int downloader(json_object *str, int file_type, std::string suffix)
   }
 
   if(proto.compare("https") == 0)
-    https_downloader(domain, path, file_type, suffix);
+    {
+      //https_downloader(domain, path, file_type, suffix);
+      std::thread https_t(https_downloader,domain,path,file_type,suffix);
+      https_t.detach();
+    }
   if(proto.compare("http") == 0)
-    http_downloader(domain, path, file_type, suffix);
+    {
+      //http_downloader(domain, path, file_type, suffix);
+      std::thread http_t(http_downloader,domain,path,file_type,suffix);
+      http_t.detach();
+    }
   return 0;
 }
