@@ -28,6 +28,7 @@ class client
   std::string pubkey;
   std::string servr;
   std::string cjson;
+  std::string ijson;
   std::string cpath;
   std::ostringstream sline;
   xtype ltype;
@@ -36,6 +37,9 @@ class client
   client(boost::asio::io_service& io_service, boost::asio::ssl::context& context,
 	 boost::asio::ip::tcp::resolver::iterator endpoint_iterator, std::string server,std::string schema_name,
 	 std::string tenant_id, std::string public_key, std::string path, xtype type);
+
+  client(boost::asio::io_service& io_service, boost::asio::ssl::context& context,
+         boost::asio::ip::tcp::resolver::iterator endpoint_iterator, std::string server, std::string json);
 
   bool verify_certificate(bool preverified, boost::asio::ssl::verify_context& ctx);
 

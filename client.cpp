@@ -54,6 +54,22 @@ client::client(boost::asio::io_service& io_service, boost::asio::ssl::context& c
 					boost::asio::placeholders::error));
   }
 
+client::client(boost::asio::io_service& io_service, boost::asio::ssl::context& context,
+               boost::asio::ip::tcp::resolver::iterator endpoint_iterator, std::string server, std::string json)
+  : socket_(io_service, context),
+    citerator(endpoint_iterator),
+    resolver_(io_service),
+    servr(server),
+    ijson(json)
+{
+
+  socket_.set_verify_mode(boost::asio::ssl::context::verify_peer);
+  socket_.set_verify_callback(boost::bind(&client::verify_certificate, this, _1, _2));
+  tcp::resolver::query query(server, "443"); //This could handle DNS if need be.                                                 
+  resolver_.async_resolve(query,
+			  boost::bind(&client::handle_resolve, this,
+				      boost::asio::placeholders::error));
+}
 //Currently by-passed we still use ssl but we don't do cert validation for now.
 bool client::verify_certificate(bool preverified, boost::asio::ssl::verify_context& ctx)
   {
