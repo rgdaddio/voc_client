@@ -1,6 +1,6 @@
 #include "https_client.h"
-//#include "client_manifest.h"
 #include<iostream>
+
 //
 //This is the primary interface to the boost asio system
 //for https/ssl.
@@ -9,10 +9,9 @@
 //a more sockets based system or a messaging middleware package
 //like nanomsg.
 //
-//This handles both messaging and download https. 
-//In the future those should be seperated like the
-//http download module.
+//This handles external  download https. 
 //
+
 using boost::asio::ip::tcp;
 
 https_client::https_client(boost::asio::io_service& io_service, boost::asio::ssl::context& context,
@@ -156,7 +155,6 @@ void https_client::handle_read_status_line(const boost::system::error_code& err)
 
 void https_client::handle_read_headers(const boost::system::error_code& err, size_t bytes_transferred)
   {
-    
     if (!err)
       {
 	// Process the response headers.
@@ -164,15 +162,8 @@ void https_client::handle_read_headers(const boost::system::error_code& err, siz
 	std::string header;
 	while (std::getline(response_stream, header) && header != "\r")
 	  //std::cout << "header " << header << "\n\n";
-	  ;
+	;
 
-	// Write whatever content we already have to output.
-	if (response_.size() > 0)
-	  {
-	    sline << &response_;
-	    cjson = sline.str();
-	  }
-	  
 	// Start reading remaining data until EOF.
 	boost::asio::async_read(socket_, response_,
 				boost::asio::transfer_at_least(1),
@@ -188,10 +179,6 @@ void https_client::handle_read_headers(const boost::system::error_code& err, siz
 
 void https_client::handle_read_content(const boost::system::error_code& err, size_t bytes_transferred)
   {
-    sline << &response_;
-    cjson = sline.str();
-    
-    
     if(bytes_transferred != 0)
       {
 	if (!err)
@@ -210,9 +197,6 @@ void https_client::handle_read_content(const boost::system::error_code& err, siz
 	  }
       }
   }
-
-
-
 
 void https_client::build_http_get_header(std::string server_ip, std::string json)
 {

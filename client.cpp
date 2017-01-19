@@ -1,6 +1,7 @@
 #include "client.h"
 #include "client_manifest.h"
 #include<iostream>
+
 //
 //This is the primary interface to the boost asio system
 //for https/ssl.
@@ -9,10 +10,12 @@
 //a more sockets based system or a messaging middleware package
 //like nanomsg.
 //
-//This handles both messaging and download https. 
-//In the future those should be seperated like the
-//http download module.
+//This handles both messaging and is an "internal" interface. 
+//Typically handling internal operations such as getManifest
+//or Registration. External access should be done with the
+//http_client or https_client modules.
 //
+
 using boost::asio::ip::tcp;
 
 client::client(boost::asio::io_service& io_service, boost::asio::ssl::context& context,
@@ -41,8 +44,8 @@ client::client(boost::asio::io_service& io_service, boost::asio::ssl::context& c
     
     if(type ==  xtype::registration || type == xtype::get_manifest)
       build_http_post_header(servr, json);
-    else if(type == xtype::download)
-      build_http_get_header(servr, json);
+    else
+      std::cout << "Unknown operation type" << std::endl;
     
     // Start an asynchronous resolve to translate the server and service names
     // into a list of endpoints.
@@ -201,7 +204,7 @@ void client::handle_read_headers(const boost::system::error_code& err, size_t by
 	  ;
 
 	// Write whatever content we already have to output.
-	if (response_.size() > 0 && ltype != xtype::download)
+	if (response_.size() > 0) //&& ltype != xtype::download)
 	  {
 	    sline << &response_;
 	    cjson = sline.str();
@@ -222,11 +225,8 @@ void client::handle_read_headers(const boost::system::error_code& err, size_t by
 
 void client::handle_read_content(const boost::system::error_code& err, size_t bytes_transferred)
   {
-    if(ltype != xtype::download)
-      {
-	sline << &response_;
-	cjson = sline.str();
-      }
+    sline << &response_;
+    cjson = sline.str();
     
     if(bytes_transferred != 0)
       {
@@ -250,9 +250,7 @@ void client::handle_read_content(const boost::system::error_code& err, size_t by
 
 void client::build_http_post_header(std::string server_ip, std::string json)
 {
-  //std::string path("/Anaina/v0/Register");
   std::ostream request_stream(&request_);
-  //request_stream << "POST "  << path << " HTTP/1.1 \r\n";
   request_stream << "POST "  << cpath << " HTTP/1.1 \r\n";
   request_stream << "Host:"  << servr << "\r\n";
   request_stream << "User-Agent: C/1.0\r\n";
@@ -277,27 +275,21 @@ void client::build_http_get_header(std::string server_ip, std::string json)
 
 std::string client::get_reg_json(void)
 {
-  //std::cout << "get reg json" << std::endl; 
-
   std::ostringstream oss;
   oss << "{" << "\"serverState\"" << ":" << "{" << "\"schemaName\"" << ":" << "\"" << schma << "\"" << "," << "\"tenantId\"" ":" 
       << "\""<< tenant << "\"" << "}" << "," << "\"publicKey\"" << ":" << "\"" << pubkey << "\"" << "," << "\"platform\"" ":" "\"linux\"" 
       << "," << "\"deviceId\"" ":" << "\"623bce38-a1f4-11e6-bb6c-3417eb9985a6\"" << "," << "\"deviceType\"" << ":" << "\"pc\"" 
       << "," << "\"pushToken\"" << ":" << "\"tt\"" << "," << "\"version\"" << ":" << "\"17.2.3\"""}";    
-  //std::cout << "strnew: " << oss.str() << std::endl;
   return oss.str();
 }
 
 std::string client::get_req_json(void)
 {
   std::map<std::string, std::string> json = manifest_processing();
-  //std::cout << "get test json" << std::endl; 
-  //std::cout << "token !!!!!!!!!!!!!!!!!!!" << access_token << std::endl;
   std::ostringstream oss;
   oss << "{" << "\"serverState\"" << ":" << "{" << "\"schemaName\"" << ":" << "\"" << schma << "\"" << "," << "\"tenantId\"" ":" 
       << "\""<< tenant << "\"" << "}" << "," << "\"vocId\"" << ":" << "\"" << json["voc_id"]  << "\"" << "," << "\"platform\"" ":" "\"linux\"" 
       << "," << "\"deviceId\"" ":" << "\"623bce38-a1f4-11e6-bb6c-3417eb9985a6\"" << "," << "\"deviceType\"" << ":" << "\"pc\"" 
       << "," << "\"refreshToken\"" << ":" << "\"" << json["refresh_token"] << "\"" << "," << "\"accessToken\"" << ":" << "\"" << json["access_token"] << "\"" << "," << "\"version\"" << ":" << "\"17.2.3\"""}";    
-  //std::cout << "strnew: " << oss.str() << std::endl;
   return oss.str();
 }

@@ -1,5 +1,6 @@
 #include "client.h"
 #include "http_client.h"
+#include "https_client.h"
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -17,16 +18,7 @@ void parse_url(const std::string& url, std::string& domain, std::string& path, s
     {
       proto    = std::string(what[1].first, what[1].second);
       domain   = std::string(what[2].first, what[2].second);
-      //std::string port     = std::string(what[3].first, what[3].second);
       path     = std::string(what[4].first, what[4].second);
-      //std::string query    = std::string(what[5].first, what[5].second);
-      //std::cout << "[" << url << "]" << std::endl;
-      //std::cout << proto << std::endl;
-      //std::cout << "domain " << domain << std::endl;
-      //std::cout << port << std::endl;
-      //std::cout << "path " << path << std::endl;
-      //std::cout << query << std::endl;
-      //std::cout << "-------------------------------" << std::endl;
     }
 }
 
@@ -40,9 +32,7 @@ int https_downloader(std::string domain, std::string path, int file_type, std::s
   boost::asio::ip::tcp::resolver::iterator iterator = resolver.resolve(query);
   boost::asio::ssl::context context(boost::asio::ssl::context::sslv23);
 
-  xtype type = xtype::download;
-  client c(io_service, context, iterator, domain, "test", "test", "test", path, type);
-
+  https_client c(io_service, context, iterator, domain, path);
   io_service.run();
   if(file_type == 1)
     {

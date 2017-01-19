@@ -2,9 +2,9 @@
 import json
 import urllib2
 
-server = "23.79.234.237"
-provider = "hlstest3"
-access_token = "hlstest3"
+server = "23.79.234.154"
+provider = "hlstest"
+access_token = "hlstest"
 
 
 header =  {

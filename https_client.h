@@ -8,9 +8,6 @@
 #include <ostream>
 #include <string>
 #include <string.h>
-#include "json/json.h"
-#include "json/json_object.h"
-#include <sqlite3.h>
 #include <string>
 #include <sstream>
 using boost::asio::ip::tcp;

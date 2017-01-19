@@ -128,8 +128,8 @@ int main(int argc, char* argv[])
 
  while(1)
    {
-     std::cout << "\nOptions: <cacheFill> <hello> <getProviderList> <getTopicList> <getProfile> <getPolicy> <^C> " << std::endl; //Fixme add more features
-     std::string mani = "cacheFill";
+     std::cout << "\nOptions: <cacheFill> <hello> <getProviderList> <getTopicList> <getProfile> <getPolicy> <^C> " << std::endl;
+     //std::string mani = "cacheFill";
      std::string val;
      std::getline(std::cin,val);
 
