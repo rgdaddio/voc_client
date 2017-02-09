@@ -47,11 +47,26 @@ static int callback(void *NotUsed, int argc, char **argv, char **azColName){
   return 0;
 }
 
+int create_table(sqlite3 *db, const char *sql_stmt, const char *table)
+{
+
+  int rc;
+  char *zErrMsg = 0;
+
+  rc = sqlite3_exec(db, sql_stmt, callback, 0, &zErrMsg);
+  if(rc != SQLITE_OK){
+    fprintf(stdout, "sqllite table: %s error\n", table);
+    fprintf(stderr, "SQL error: %s\n", zErrMsg);
+    sqlite3_free(zErrMsg);
+  }else{
+    fprintf(stdout, "sqllite table: %s created sucessfully\n", table);
+  }
+  return 0;
+}
 
 int create_user_table(sqlite3 *db)
 {
-  int rc;
-  char *zErrMsg = 0;
+  const char *table = "voc_user";
   const char *sql = "create table if not exists voc_user ("\
     "userid text,"\
     "password text,"\
@@ -78,91 +93,56 @@ int create_user_table(sqlite3 *db)
     "server_state text,"\
     "my_row integer primary key autoincrement);";
 
-  rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
-  if(rc != SQLITE_OK){
-    fprintf(stderr, "SQL error: %s\n", zErrMsg);
-    sqlite3_free(zErrMsg);
-  }else{
-    fprintf(stdout, "User table created sucessfully\n");
-  }
+  create_table(db, sql, table);
   return 0;
 }
 
 int create_provider_table(sqlite3 *db)
 {
-  int rc;
-  char *zErrMsg = 0;
+  const char *table = "provider";
   const char *sql = "create table if not exists provider ("\
     "name text unique,"\
     "contentprovider text,"\
     "subscribed integer);";
   
-  rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
-  if(rc != SQLITE_OK){
-    fprintf(stderr, "SQL error: %s\n", zErrMsg);
-    sqlite3_free(zErrMsg);
-  }else{
-    fprintf(stdout, "Provider table created sucessfully\n");
-  }
+  create_table(db, sql, table);
   return 0;
 }
 
 int create_category_table(sqlite3 *db)
 {
-  int rc;
-  char *zErrMsg = 0;
+  const char *table = "category";
   const char *sql = "create table if not exists category ("\
     "name text unique,"\
     "subscribed integer);";
   
-  rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
-  if(rc != SQLITE_OK){
-    fprintf(stderr, "SQL error: %s\n", zErrMsg);
-    sqlite3_free(zErrMsg);
-  }else{
-    fprintf(stdout, "Category table created sucessfully\n");
-  }
+  create_table(db, sql, table);
   return 0;
 }
 
 int create_uuid_table(sqlite3 *db)
 {
-    int rc;
-    char *zErrMsg = 0;
+    const char *table = "uuid_table";
     const char *sql = "create table if not exists uuid_table ("\
       "uuid text);";
-      rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
-  if(rc != SQLITE_OK){
-    fprintf(stderr, "SQL error: %s\n", zErrMsg);
-    sqlite3_free(zErrMsg);
-  }else{
-    fprintf(stdout, "UUID table created sucessfully\n");
-  }
+  create_table(db, sql, table);
   return 0;
 }
 
 int create_playing_table(sqlite3 *db)
 {
-    int rc;
-    char *zErrMsg = 0;
-    const char *sql = "create table if not exists provider ("\
+    const char *table = "playing";
+    const char *sql = "create table if not exists playing ("\
       "unique_Id text,"\
       "timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);";
 
-    rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
-    if(rc != SQLITE_OK){
-      fprintf(stderr, "SQL error: %s\n", zErrMsg);
-      sqlite3_free(zErrMsg);
-    }else{
-      fprintf(stdout, "Playing table created sucessfully\n");
-    }
+    create_table(db, sql, table);
     return 0;
 }
 
 int create_content_table(sqlite3 *db)
 {
-  int rc;
-  char *zErrMsg = 0;
+  const char *table = "content_status";
   const char *sql = "create table if not exists content_status ("\
     "download_time text,"\
     "download length integer,"\
@@ -172,41 +152,27 @@ int create_content_table(sqlite3 *db)
     "unique_id text,"\
     "my_row integer primary key autoincrement);";
   
-  rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
-  if(rc != SQLITE_OK){
-    fprintf(stderr, "SQL error: %s\n", zErrMsg);
-    sqlite3_free(zErrMsg);
-  }else{
-    fprintf(stdout, "Content table created sucessfully\n");
-  }
+  create_table(db, sql, table);
   return 0;
 }
 
 int create_consumption_table(sqlite3 *db)
 {
-  int rc;
-  char *zErrMsg = 0;
+  const char *table = "consumption_status";
   const char *sql = "create table if not exists consumption_status ("\
     "watch_time int,"\
     "watchstart integer,"\
     "watchend int,"\
     "my_row integer primary key autoincrement);";
   
-  rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
-  if(rc != SQLITE_OK){
-    fprintf(stderr, "SQL error: %s\n", zErrMsg);
-    sqlite3_free(zErrMsg);
-  }else{
-    fprintf(stdout, "Consumption table created sucessfully\n");
-  }
+  create_table(db, sql, table);
   return 0;
 }
 
 int create_ad_consumption_table(sqlite3 *db)
 {
-  int rc;
-  char *zErrMsg = 0;
-  const char *sql = "create table if not exists consumption_status ("\
+  const char *table = "ad_consumption_status";
+  const char *sql = "create table if not exists ad_consumption_status ("\
     "adurl text,"\
     "duration int,"\
     "starttime integer,"\
@@ -215,20 +181,13 @@ int create_ad_consumption_table(sqlite3 *db)
     "unique_id text,"\
     "my_row integer primary key autoincrement);";
   
-  rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
-  if(rc != SQLITE_OK){
-    fprintf(stderr, "SQL error: %s\n", zErrMsg);
-    sqlite3_free(zErrMsg);
-  }else{
-    fprintf(stdout, "Ad Consumption table created sucessfully\n");
-  }
+  create_table(db, sql, table);
   return 0;
 }
 
 int create_cache_table(sqlite3 *db)
 {
-  int rc;
-  char *zErrMsg = 0;
+  const char *table = "cache_manifest";
   const char *sql = "create table if not exists cache_manifest ("\
     "local_file text,"\
     "local_thumbnail text,"\
@@ -257,13 +216,7 @@ int create_cache_table(sqlite3 *db)
     "save integer default 0,"\
     "my_row integer primary key autoincrement);";
 
-  rc = sqlite3_exec(db, sql, callback, 0, &zErrMsg);
-  if(rc != SQLITE_OK){
-    fprintf(stderr, "SQL error: %s\n", zErrMsg);
-    sqlite3_free(zErrMsg);
-  }else{
-    fprintf(stdout, "User table created sucessfully\n");
-  }
+  create_table(db, sql, table);
   return 0;
 }
 
