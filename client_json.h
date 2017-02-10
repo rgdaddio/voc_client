@@ -50,6 +50,7 @@ std::string get_policy_name(json_object *j);
 std::string get_key_server_url(json_object *j);
 std::string quotesql(const std::string& s);
 std::string quotesqlint(std::string s);
+std::string parse_provider_list(std::string jstr);
 bool quotsqlbool(bool b);
 
 

@@ -721,3 +721,39 @@ std::string get_key_server_url(json_object *j) //j is an array object
     }
   return err;
 }
+
+
+std::string parse_provider_list(std::string jstr)
+{
+  std::string retval = "";
+  json_object *jsonArray = json_tokener_parse(jstr.c_str());
+
+  int length = json_object_array_length(jsonArray);
+  for(int i = 0; i < length; i++)
+  {
+    json_object *lobj = json_object_array_get_idx(jsonArray, i);
+    //printf(" provider_json : %s\n", json_object_get_string(lobj));
+    json_object *providerJson = json_tokener_parse(json_object_get_string(lobj));
+
+    json_object *name_tmp = json_object_object_get(providerJson, "name");
+    std::string name = json_object_get_string(name_tmp);
+    std::cout<< name  << std::endl;
+
+    json_object *cp_tmp = json_object_object_get(providerJson, "contentProvider");
+    std::string cp =  json_object_get_string(cp_tmp);
+    std::cout<< cp << std::endl;
+
+    json_object *sub_tmp = json_object_object_get(providerJson, "autoSubscribe");
+    int sub = json_object_get_boolean(sub_tmp);
+    printf("autoSub: %s\n", sub? "true": "false");
+    
+    retval += "(" + quotesql(name) + "," + quotesql(cp) + "," + std::to_string(sub) + ")";
+    if(i != length-1){
+      retval += ",";
+    }
+  }
+
+  return retval;
+}
+
+

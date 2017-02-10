@@ -1,4 +1,5 @@
 #include "client_db.h"
+#include "client_json.h"
 
 int handle_registration_json(std::string jstr, std::string server)
 {
@@ -21,6 +22,15 @@ int handle_registration_json(std::string jstr, std::string server)
       std::cout<< "DB regisistration complete" << std::endl;
     }
   close_voc_db(db);
+  return 0;
+}
+
+int handle_provider_list(std::string jstr, std::string server)
+{
+  sqlite3 *db = open_voc_db();
+  std::string upsert_query_start = "INSERT OR REPLACE INTO provider VALUES ";
+  std::string upsert_query =  upsert_query_start + parse_provider_list(jstr);
+  execute_query(db, upsert_query.c_str(), "provider");
   return 0;
 }
 
