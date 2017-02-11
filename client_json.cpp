@@ -50,7 +50,8 @@ std::string get_voc_id(json_object *j)
 {
   std::string rc;
   std::cout << "vocid" << std::endl;
-  json_object *tmp = json_object_object_get(j, "vocId");
+  json_object *tmp;
+  json_object_object_get_ex(j, "vocId", &tmp);
   
   return (rc = json_object_get_string(tmp));
 }
@@ -76,7 +77,8 @@ std::string get_device_type(json_object *j)
 std::string get_access_token(json_object *j)
 {
   std::string rc;
-  json_object *tmp = json_object_object_get(j, "accessToken");
+  json_object *tmp;
+  json_object_object_get_ex(j, "accessToken", &tmp);
   return (rc = json_object_get_string(tmp));
 }
 
@@ -84,14 +86,16 @@ std::string get_access_token(json_object *j)
 std::string get_refresh_token(json_object *j)
 {
   std::string rc;
-  json_object *tmp = json_object_object_get(j, "refreshToken");
+  json_object *tmp;
+  json_object_object_get_ex(j, "refreshToken", &tmp);
   return (rc = json_object_get_string(tmp));
 }
 
 std::string get_congestion_detection(json_object *j)
 {
   std::string rc;
-  json_object *tmp = json_object_object_get(j, "congestionDetection");
+  json_object *tmp;
+  json_object_object_get_ex(j, "congestionDetection", &tmp);
   if(!tmp)
     return "";
   return (rc = json_object_get_string(tmp));
@@ -100,14 +104,16 @@ std::string get_congestion_detection(json_object *j)
 std::string get_ads_frequency(json_object *j)
 {
   std::string rc;
-  json_object *tmp = json_object_object_get(j, "adsFrequency");
+  json_object *tmp;
+  json_object_object_get_ex(j, "adsFrequency", &tmp);
   return (rc = json_object_get_string(tmp));
 }
 
 std::string get_daily_download_quota(json_object *j)
 {
   std::string rc;
-  json_object *tmp = json_object_object_get(j, "dailyDownloadQuota");
+  json_object *tmp;
+  json_object_object_get_ex(j, "dailyDownloadQuota", &tmp);
   if(!tmp)
     return "";
   return (rc = json_object_get_string(tmp));
@@ -116,7 +122,8 @@ std::string get_daily_download_quota(json_object *j)
 std::string get_daily_download_wifi(json_object *j)
 {
   std::stringstream s;
-  json_object *tmp = json_object_object_get(j, "dailyDownloadWifi");
+  json_object *tmp;
+  json_object_object_get_ex(j, "dailyDownloadWifi", &tmp);
   if(!tmp)
     return 0;
   s << json_object_get_int(tmp);
@@ -126,7 +133,8 @@ std::string get_daily_download_wifi(json_object *j)
 std::string get_daily_download_cellular(json_object *j)
 {
   std::stringstream s;
-  json_object *tmp = json_object_object_get(j, "dailyDownloadCellular");
+  json_object *tmp;
+  json_object_object_get_ex(j, "dailyDownloadCellular", &tmp);
   if(!tmp){
     std::cout << "FAIL on get !!!!!!!!!!!!\n" << std::endl;
     std::string sc = "";
@@ -139,14 +147,16 @@ std::string get_daily_download_cellular(json_object *j)
 std::string get_sdk_capabilities(json_object *j)
 {
   std::string rc;
-  json_object *tmp = json_object_object_get(j, "sdkCapabilities");
+  json_object *tmp;
+  json_object_object_get_ex(j, "sdkCapabilities", &tmp);
   return (rc = json_object_get_string(tmp));
 }
 
 std::string get_daily_download_manifest(json_object *j)
 {
   std::stringstream s;
-  json_object *tmp = json_object_object_get(j, "dailyManifestCount");
+  json_object *tmp;
+  json_object_object_get_ex(j, "dailyManifestCount", &tmp);
   if(!tmp)
     return 0;
   s << json_object_get_int(tmp);
@@ -156,7 +166,8 @@ std::string get_daily_download_manifest(json_object *j)
 std::string get_max_content_duration(json_object *j)
 {
   std::stringstream s;
-  json_object *tmp = json_object_object_get(j, "maxContentDuration");
+  json_object *tmp;
+  json_object_object_get_ex(j, "maxContentDuration", &tmp);
   if(!tmp)
     return 0;
   s << json_object_get_int(tmp);
@@ -166,21 +177,24 @@ std::string get_max_content_duration(json_object *j)
 std::string get_play_ads(json_object *j)
 {
   std::string rc;
-  json_object *tmp = json_object_object_get(j, "playAds");
+  json_object *tmp;
+  json_object_object_get_ex(j, "playAds", &tmp);
   return (rc = json_object_get_string(tmp));
 }
 
 std::string get_skip_policy(json_object *j)
 {
   std::string rc;
-  json_object *tmp = json_object_object_get(j, "skipPolicyFirstTime");
+  json_object *tmp;
+  json_object_object_get_ex(j, "skipPolicyFirstTime", &tmp);
   return (rc = json_object_get_string(tmp));
 }
 
 std::string get_tod_policy(json_object *j)
 {
   std::string rc;
-  json_object *tmp = json_object_object_get(j, "todPolicy");
+  json_object *tmp;
+  json_object_object_get_ex(j, "todPolicy", &tmp);
   return (rc = json_object_get_string(tmp));
 }
 
@@ -188,7 +202,8 @@ std::string get_tod_policy(json_object *j)
 std::string get_token_expiration(json_object *j)
 {
   std::stringstream s;
-  json_object *tmp = json_object_object_get(j, "tokenExpiryDate");
+  json_object *tmp;
+  json_object_object_get_ex(j, "tokenExpiryDate", &tmp);
   if(!tmp)
     return 0;
   s << json_object_get_int64(tmp);
@@ -198,7 +213,8 @@ std::string get_token_expiration(json_object *j)
 std::string get_server_state(json_object *j)
 {
   std::string rc = "test";
-  json_object *tmp = json_object_object_get(j, "serverState");
+  json_object *tmp;
+  json_object_object_get_ex(j, "serverState", &tmp);
   if(!tmp)
     return rc;
   return (rc = json_object_get_string(tmp));
@@ -226,7 +242,8 @@ std::string get_local_file(json_object *j) //j is an array object
 	    break;
 	  json_object *pobj = json_object_array_get_idx(objtor, i);
 	  std::string local_file = get_sha1(json_object_get_string(lfile));
-	  json_object *str = json_object_object_get(pobj,"url");
+	  json_object *str;
+      json_object_object_get_ex(pobj,"url", &str);
 
 	  downloader(str, 1, local_file + ".1"); //need this but not now
 	  return (local_file + ".1");
@@ -735,15 +752,18 @@ std::string parse_provider_list(std::string jstr)
     //printf(" provider_json : %s\n", json_object_get_string(lobj));
     json_object *providerJson = json_tokener_parse(json_object_get_string(lobj));
 
-    json_object *name_tmp = json_object_object_get(providerJson, "name");
+    json_object *name_tmp;
+    json_object_object_get_ex(providerJson, "name", &name_tmp);
     std::string name = json_object_get_string(name_tmp);
-    std::cout<< name  << std::endl;
+    std::cout<< "name:" << name  << std::endl;
 
-    json_object *cp_tmp = json_object_object_get(providerJson, "contentProvider");
+    json_object *cp_tmp;
+    json_object_object_get_ex(providerJson, "contentProvider", &cp_tmp);
     std::string cp =  json_object_get_string(cp_tmp);
-    std::cout<< cp << std::endl;
+    std::cout<< "content provider:" << cp << std::endl;
 
-    json_object *sub_tmp = json_object_object_get(providerJson, "autoSubscribe");
+    json_object *sub_tmp;
+    json_object_object_get_ex(providerJson, "autoSubscribe", &sub_tmp);
     int sub = json_object_get_boolean(sub_tmp);
     printf("autoSub: %s\n", sub? "true": "false");
     
