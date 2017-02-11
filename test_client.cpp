@@ -59,6 +59,7 @@ int get_provider_list(std::string arv1, std::string arv2, std::string arv3, std:
   xtype type = xtype::get_manifest; // xtype::provider_list?
   std::string jstr = make_request(arv1, arv2, arv3, arv4, path, type);
   std::cout << jstr << std::endl;
+  handle_provider_list(jstr, arv1);
   return 0;
 }
 

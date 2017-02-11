@@ -64,6 +64,23 @@ int create_table(sqlite3 *db, const char *sql_stmt, const char *table)
   return 0;
 }
 
+int execute_query(sqlite3 *db, const char *sql_stmt, std::string table)
+{
+
+  int rc;
+  char *zErrMsg = 0;
+
+  rc = sqlite3_exec(db, sql_stmt, callback, 0, &zErrMsg);
+  if(rc != SQLITE_OK){
+    fprintf(stdout, "sqllite table: %s error\n", table);
+    fprintf(stderr, "SQL error: %s\n", zErrMsg);
+    sqlite3_free(zErrMsg);
+  }else{
+    fprintf(stdout, "sqllite query: %s created sucess\n", table);
+  }
+  return 0;
+}
+
 int create_user_table(sqlite3 *db)
 {
   const char *table = "voc_user";
