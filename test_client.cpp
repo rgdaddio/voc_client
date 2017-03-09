@@ -2,6 +2,7 @@
 #include "client_json.h"
 #include "client_manifest.h"
 #include "client_registration.h"
+#include "client_downloader.h"
 #include <json/json.h>
 #include <json/json_object.h>
 #include <string>
@@ -161,6 +162,9 @@ int main(int argc, char* argv[])
         get_policy(argv[1], argv[2], argv[3], argv[4]);
      }
      else if(val.compare("status") == 0){
+        send_status(argv[1], argv[2], argv[3], argv[4]);
+     }
+     else if(val.compare("clearCache") == 0){
         send_status(argv[1], argv[2], argv[3], argv[4]);
      }
     else{
