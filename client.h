@@ -14,7 +14,7 @@
 #include <string>
 #include <sstream>
 using boost::asio::ip::tcp;
-enum class xtype {registration=1, get_manifest, download};
+enum class xtype {registration=1, get_manifest, download, status};
 class client
 {
   private:
@@ -54,6 +54,7 @@ class client
   void build_http_get_header(std::string server_ip, std::string json);
   std::string get_reg_json(void);
   std::string get_req_json(void);
+  std::string get_status_json(void);
 
   std::string get_response_json(void)
     {

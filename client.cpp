@@ -39,10 +39,12 @@ client::client(boost::asio::io_service& io_service, boost::asio::ssl::context& c
       json = get_reg_json();
     else if(type == xtype::get_manifest)
       json = get_req_json();
+    else if(type == xtype::status)
+      json = get_status_json();
     else
       std::cout << "No POST operation" << std::endl; 
     
-    if(type ==  xtype::registration || type == xtype::get_manifest)
+    if(type ==  xtype::registration || type == xtype::get_manifest || type == xtype::status)
       build_http_post_header(servr, json);
     else
       std::cout << "Unknown operation type" << std::endl;
@@ -280,6 +282,19 @@ std::string client::get_reg_json(void)
       << "\""<< tenant << "\"" << "}" << "," << "\"publicKey\"" << ":" << "\"" << pubkey << "\"" << "," << "\"platform\"" ":" "\"linux\"" 
       << "," << "\"deviceId\"" ":" << "\"623bce38-a1f4-11e6-bb6c-3417eb9985a6\"" << "," << "\"deviceType\"" << ":" << "\"pc\"" 
       << "," << "\"pushToken\"" << ":" << "\"tt\"" << "," << "\"version\"" << ":" << "\"17.2.3\"""}";    
+  return oss.str();
+}
+
+
+std::string client::get_status_json(void)
+{
+  //TODO will need to access the database and get status related variables to put in here 
+  std::map<std::string, std::string> json = manifest_processing();
+  std::ostringstream oss;
+  oss << "{" << "\"serverState\"" << ":" << "{" << "\"schemaName\"" << ":" << "\"" << schma << "\"" << "," << "\"tenantId\"" ":" 
+      << "\""<< tenant << "\"" << "}" << "," << "\"vocId\"" << ":" << "\"" << json["voc_id"]  << "\"" << "," << "\"platform\"" ":" "\"linux\"" 
+      << "," << "\"deviceId\"" ":" << "\"623bce38-a1f4-11e6-bb6c-3417eb9985a6\"" << "," << "\"deviceType\"" << ":" << "\"pc\"" 
+      << "," << "\"refreshToken\"" << ":" << "\"" << json["refresh_token"] << "\"" << "," << "\"accessToken\"" << ":" << "\"" << json["access_token"] << "\"" << "," << "\"version\"" << ":" << "\"17.2.3\"" << "," << "\"deviceStatus\"" << ":" << "{" <<"\"charger\"" << ":" << "true" << "}""}";    
   return oss.str();
 }
 

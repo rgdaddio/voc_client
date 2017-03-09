@@ -28,6 +28,14 @@ std::string make_request(std::string ip_address,  std::string schema_name,
   return jstr;
 }
 
+int send_status(std::string arv1, std::string arv2, std::string arv3, std::string arv4)
+{
+  std::string path = "/Anaina/v0/Status";
+  xtype type = xtype::status;
+  std::string jstr = make_request(arv1, arv2, arv3, arv4, path, type);
+  return 0;
+}
+
 int get_manifest_from_server(std::string arv1, std::string arv2, std::string arv3, std::string arv4)
 {
   std::string path = "/Anaina/v0/Download-Manifest";
@@ -151,6 +159,9 @@ int main(int argc, char* argv[])
      }
      else if(val.compare("getPolicy") == 0){
         get_policy(argv[1], argv[2], argv[3], argv[4]);
+     }
+     else if(val.compare("status") == 0){
+        send_status(argv[1], argv[2], argv[3], argv[4]);
      }
     else{
        std::cout << "Unknown Option " << val << std::endl;
