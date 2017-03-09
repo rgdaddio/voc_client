@@ -99,3 +99,11 @@ int downloader(json_object *str, int file_type, std::string suffix)
     }
   return 0;
 }
+
+
+int clear_cache()
+{
+  boost::filesystem::path dir("test/cache/"); //since standard c++ sucks about this.
+  boost::filesystem::remove_all(dir); //since standard c++ sucks about this.
+  return 0;
+}
