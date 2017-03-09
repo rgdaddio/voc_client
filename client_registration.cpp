@@ -18,7 +18,7 @@ int handle_registration_json(std::string jstr, std::string server)
       rc = create_consumption_table(db);
       rc = create_ad_consumption_table(db);
       rc = create_playing_table(db);
-      rc = creat_user_table_entry(db, jstr, server);
+      rc = create_user_table_entry(db, jstr, server);
       std::cout<< "DB regisistration complete" << std::endl;
     }
   close_voc_db(db);

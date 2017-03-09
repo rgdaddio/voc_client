@@ -294,7 +294,7 @@ std::map<std::string, std::string> select_voc_table_json(sqlite3 *db, std::strin
   return value_map;
 
 }
-int creat_user_table_entry(sqlite3 *db, std::string jstr, std::string server)
+int create_user_table_entry(sqlite3 *db, std::string jstr, std::string server)
 {
   json_object *new_obj = json_tokener_parse(jstr.c_str());
   std::string userId = "test";
