@@ -296,6 +296,8 @@ std::map<std::string, std::string> select_voc_table_json(sqlite3 *db, std::strin
 }
 int create_user_table_entry(sqlite3 *db, std::string jstr, std::string server)
 {
+  
+  std::cout << jstr << std::endl;
   json_object *new_obj = json_tokener_parse(jstr.c_str());
   std::string userId = "test";
   std::string password = "test";
