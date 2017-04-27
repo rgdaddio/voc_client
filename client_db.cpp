@@ -72,11 +72,11 @@ int execute_query(sqlite3 *db, const char *sql_stmt, std::string table)
 
   rc = sqlite3_exec(db, sql_stmt, callback, 0, &zErrMsg);
   if(rc != SQLITE_OK){
-    fprintf(stdout, "sqllite table: %s error\n", table);
+    //fprintf(stdout, "sqllite table: %s error\n", table);
     fprintf(stderr, "SQL error: %s\n", zErrMsg);
     sqlite3_free(zErrMsg);
   }else{
-    fprintf(stdout, "sqllite query: %s created sucess\n", table);
+    std::cout <<  "sqllite query:  " << table << " created sucess\n" << std::endl;;
   }
   return 0;
 }

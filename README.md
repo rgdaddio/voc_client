@@ -10,6 +10,9 @@ sudo apt-get install libboost-dev<br>
 sudo apt-get install libboost-thread-dev<br>
 sudo apt-get install libboost-regex-dev<br>
 sudo apt-get install libboost-filesystem-dev<br>>
+
+sudo apt-get install libjsoncpp-dev libjsoncpp0
+
 make
 
 //To run and register<br>

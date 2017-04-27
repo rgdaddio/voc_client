@@ -3,8 +3,6 @@
 #include "client_manifest.h"
 #include "client_registration.h"
 #include "client_downloader.h"
-#include <json/json.h>
-#include <json/json_object.h>
 #include <string>
 
 

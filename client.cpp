@@ -1,6 +1,7 @@
 #include "client.h"
 #include "client_manifest.h"
 #include<iostream>
+#include <jsoncpp/json/json.h>
 
 //
 //This is the primary interface to the boost asio system
@@ -277,12 +278,24 @@ void client::build_http_get_header(std::string server_ip, std::string json)
 
 std::string client::get_reg_json(void)
 {
-  std::ostringstream oss;
-  oss << "{" << "\"serverState\"" << ":" << "{" << "\"schemaName\"" << ":" << "\"" << schma << "\"" << "," << "\"tenantId\"" ":" 
-      << "\""<< tenant << "\"" << "}" << "," << "\"publicKey\"" << ":" << "\"" << pubkey << "\"" << "," << "\"platform\"" ":" "\"linux\"" 
-      << "," << "\"deviceId\"" ":" << "\"623bce38-a1f4-11e6-bb6c-3417eb9985a6\"" << "," << "\"deviceType\"" << ":" << "\"pc\"" 
-      << "," << "\"pushToken\"" << ":" << "\"tt\"" << "," << "\"version\"" << ":" << "\"17.2.3\"""}";    
-  return oss.str();
+ 
+  Json::Value body(Json::objectValue);
+  Json::Value serverState;
+  serverState["schemaName"] = schma;
+  serverState["tenantId"] = tenant;
+  body["serverState"] = serverState;
+  body["publicKey"] = pubkey;
+  body["platform"] = "linux";
+  body["deviceId"] = "623bce38-a1f4-11e6-bb6c-3417eb9985a6";
+  body["deviceType"] = "pc";
+  body["pushToken"] = "";
+  body["version"] = "17.2.3";
+
+  //better way to do this?
+  Json::FastWriter fastWriter;
+  std::string output = fastWriter.write(body);
+
+  return output;
 }
 
 
@@ -290,21 +303,48 @@ std::string client::get_status_json(void)
 {
   //TODO will need to access the database and get status related variables to put in here 
   std::map<std::string, std::string> json = manifest_processing();
-  std::ostringstream oss;
-  oss << "{" << "\"serverState\"" << ":" << "{" << "\"schemaName\"" << ":" << "\"" << schma << "\"" << "," << "\"tenantId\"" ":" 
-      << "\""<< tenant << "\"" << "}" << "," << "\"vocId\"" << ":" << "\"" << json["voc_id"]  << "\"" << "," << "\"platform\"" ":" "\"linux\"" 
-      << "," << "\"deviceId\"" ":" << "\"623bce38-a1f4-11e6-bb6c-3417eb9985a6\"" << "," << "\"deviceType\"" << ":" << "\"pc\"" 
-      << "," << "\"refreshToken\"" << ":" << "\"" << json["refresh_token"] << "\"" << "," << "\"accessToken\"" << ":" << "\"" << json["access_token"] << "\"" << "," << "\"version\"" << ":" << "\"17.2.3\"" << "," << "\"deviceStatus\"" << ":" << "{" <<"\"charger\"" << ":" << "true" << "}""}";    
-  return oss.str();
+
+  Json::Value body(Json::objectValue);
+  Json::Value serverState;
+  serverState["schemaName"] = schma;
+  serverState["tenantId"] = tenant;
+  body["serverState"] = serverState;
+  body["vocId"] = json["voc_id"];
+  body["platform"] = "linux";
+  body["deviceId"] = "623bce38-a1f4-11e6-bb6c-3417eb9985a6";
+  body["deviceType"] = "pc";
+  body["refreshToken"] = json["refresh_token"];
+  body["accessToken"] = json["access_token"];
+  body["version"] = "17.2.3";
+  Json::Value deviceStatus;
+  deviceStatus["charger"] = true;
+  body["deviceStatus"] = deviceStatus;
+
+  Json::FastWriter fastWriter;
+  std::string output = fastWriter.write(body);
+  return output;
 }
 
 std::string client::get_req_json(void)
 {
   std::map<std::string, std::string> json = manifest_processing();
-  std::ostringstream oss;
-  oss << "{" << "\"serverState\"" << ":" << "{" << "\"schemaName\"" << ":" << "\"" << schma << "\"" << "," << "\"tenantId\"" ":" 
-      << "\""<< tenant << "\"" << "}" << "," << "\"vocId\"" << ":" << "\"" << json["voc_id"]  << "\"" << "," << "\"platform\"" ":" "\"linux\"" 
-      << "," << "\"deviceId\"" ":" << "\"623bce38-a1f4-11e6-bb6c-3417eb9985a6\"" << "," << "\"deviceType\"" << ":" << "\"pc\"" 
-      << "," << "\"refreshToken\"" << ":" << "\"" << json["refresh_token"] << "\"" << "," << "\"accessToken\"" << ":" << "\"" << json["access_token"] << "\"" << "," << "\"version\"" << ":" << "\"17.2.3\"""}";    
-  return oss.str();
+  Json::Value body(Json::objectValue);
+  Json::Value serverState;
+  serverState["schemaName"] = schma;
+  serverState["tenantId"] = tenant;
+  body["serverState"] = serverState;
+  body["vocId"] = json["voc_id"];
+  body["platform"] = "linux";
+  body["deviceId"] = "623bce38-a1f4-11e6-bb6c-3417eb9985a6";
+  body["deviceType"] = "pc";
+  body["refreshToken"] = json["refresh_token"];
+  body["accessToken"] = json["access_token"];
+  body["version"] = "17.2.3";
+  Json::Value deviceStatus;
+  deviceStatus["charger"] = true;
+  body["deviceStatus"] = deviceStatus;
+
+  Json::FastWriter fastWriter;
+  std::string output = fastWriter.write(body);
+  return output;
 }
