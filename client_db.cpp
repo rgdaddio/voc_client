@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <jsoncpp/json/json.h>
 //
 //sqalite interface file
 //Maintained 'c' style for portability to basic 'c' implementations
@@ -298,6 +299,19 @@ int create_user_table_entry(sqlite3 *db, std::string jstr, std::string server)
 {
   
   std::cout << jstr << std::endl;
+
+
+  Json::Value root;   
+  Json::Reader reader;
+  bool parsingSuccessful = reader.parse( jstr.c_str(), root );     //parse process
+  if ( !parsingSuccessful )
+  {
+    std::cout  << "Failed to parse"
+           << reader.getFormattedErrorMessages();
+    return 0;
+  }
+
+
   json_object *new_obj = json_tokener_parse(jstr.c_str());
   std::string userId = "test";
   std::string password = "test";
@@ -311,20 +325,20 @@ int create_user_table_entry(sqlite3 *db, std::string jstr, std::string server)
     + quotesql((get_device_id(new_obj)).c_str()) + ","
     + quotesql((get_platform(new_obj)).c_str()) + ","
     + quotesql((get_device_type(new_obj)).c_str()) + ","
-    + quotesql((get_access_token(new_obj)).c_str()) + ","
-    + quotesql((get_refresh_token(new_obj)).c_str()) + ","
-    + quotesql((get_voc_id(new_obj)).c_str()) + ","
+    + quotesql( root["accessToken"].asString()) + ","
+    + quotesql( root["refreshToken"].asString() ) + ","
+    + quotesql( root["vocId"].asString() ) + ","
     + quotesql((get_congestion_detection(new_obj)).c_str()) + ","
     + quotesql((get_ads_frequency(new_obj)).c_str()) + ","
-    + quotesql((get_daily_download_quota(new_obj)).c_str()) + ","
+    + quotesql( root["dailDownloadQuota"].asString() ) + ","
     + quotesqlint((get_daily_download_manifest(new_obj)).c_str()) + ","
     + quotesqlint((get_daily_download_wifi(new_obj)).c_str()) + ","
     + quotesqlint((get_daily_download_cellular(new_obj)).c_str()) + ","
     + quotesql((get_sdk_capabilities(new_obj)).c_str()) + ","
     + quotesqlint((get_max_content_duration(new_obj)).c_str()) + ","
-    + quotesql((get_play_ads(new_obj)).c_str()) + ","
-    + quotesql((get_skip_policy(new_obj)).c_str()) + ","
-    + quotesql((get_tod_policy(new_obj)).c_str()) + ","
+    + quotesql( root["playAds"].asString() ) + ","
+    + quotesql( root["skipPolicyFirstTime"].asString() ) + ","
+    + quotesql( root["todPolicy"].asString() ) + ","
     + quotesqlint((get_token_expiration(new_obj)).c_str()) + ","
     + quotesql(server.c_str()) + ","
     + quotesql((get_server_state(new_obj)).c_str()) +
