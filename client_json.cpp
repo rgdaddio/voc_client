@@ -46,15 +46,6 @@ std::string get_sha1(const std::string& str)
   return std::string(buf);
 }
 
-std::string get_voc_id(json_object *j)
-{
-  std::string rc;
-  std::cout << "vocid" << std::endl;
-  json_object *tmp;
-  json_object_object_get_ex(j, "vocId", &tmp);
-  
-  return (rc = json_object_get_string(tmp));
-}
 
 std::string get_platform(json_object *j)
 {

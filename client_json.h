@@ -4,7 +4,6 @@
 
 extern std::string get_registration_json(void);
 
-std::string get_voc_id(json_object *j);
 std::string get_platform(json_object *j);
 std::string get_device_id(json_object *j);
 std::string get_device_type(json_object *j);
