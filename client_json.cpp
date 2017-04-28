@@ -74,66 +74,6 @@ std::string get_access_token(json_object *j)
 }
 
 
-std::string get_refresh_token(json_object *j)
-{
-  std::string rc;
-  json_object *tmp;
-  json_object_object_get_ex(j, "refreshToken", &tmp);
-  return (rc = json_object_get_string(tmp));
-}
-
-std::string get_congestion_detection(json_object *j)
-{
-  std::string rc;
-  json_object *tmp;
-  json_object_object_get_ex(j, "congestionDetection", &tmp);
-  if(!tmp)
-    return "";
-  return (rc = json_object_get_string(tmp));
-}
-
-std::string get_ads_frequency(json_object *j)
-{
-  std::string rc;
-  json_object *tmp;
-  json_object_object_get_ex(j, "adsFrequency", &tmp);
-  return (rc = json_object_get_string(tmp));
-}
-
-std::string get_daily_download_quota(json_object *j)
-{
-  std::string rc;
-  json_object *tmp;
-  json_object_object_get_ex(j, "dailyDownloadQuota", &tmp);
-  if(!tmp)
-    return "";
-  return (rc = json_object_get_string(tmp));
-}
-
-std::string get_daily_download_wifi(json_object *j)
-{
-  std::stringstream s;
-  json_object *tmp;
-  json_object_object_get_ex(j, "dailyDownloadWifi", &tmp);
-  if(!tmp)
-    return 0;
-  s << json_object_get_int(tmp);
-  return s.str();
-}
-
-std::string get_daily_download_cellular(json_object *j)
-{
-  std::stringstream s;
-  json_object *tmp;
-  json_object_object_get_ex(j, "dailyDownloadCellular", &tmp);
-  if(!tmp){
-    std::cout << "FAIL on get !!!!!!!!!!!!\n" << std::endl;
-    std::string sc = "";
-    return sc;
-  }
-  s << json_object_get_int64(tmp);
-  return s.str();
-}
 
 std::string get_sdk_capabilities(json_object *j)
 {
@@ -154,24 +94,6 @@ std::string get_daily_download_manifest(json_object *j)
   return s.str();
 }
 
-std::string get_max_content_duration(json_object *j)
-{
-  std::stringstream s;
-  json_object *tmp;
-  json_object_object_get_ex(j, "maxContentDuration", &tmp);
-  if(!tmp)
-    return 0;
-  s << json_object_get_int(tmp);
-  return s.str();
-}
-
-std::string get_play_ads(json_object *j)
-{
-  std::string rc;
-  json_object *tmp;
-  json_object_object_get_ex(j, "playAds", &tmp);
-  return (rc = json_object_get_string(tmp));
-}
 
 std::string get_skip_policy(json_object *j)
 {
