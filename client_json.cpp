@@ -95,14 +95,6 @@ std::string get_daily_download_manifest(json_object *j)
 }
 
 
-std::string get_skip_policy(json_object *j)
-{
-  std::string rc;
-  json_object *tmp;
-  json_object_object_get_ex(j, "skipPolicyFirstTime", &tmp);
-  return (rc = json_object_get_string(tmp));
-}
-
 std::string get_tod_policy(json_object *j)
 {
   std::string rc;

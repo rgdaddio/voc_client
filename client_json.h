@@ -11,7 +11,6 @@ std::string get_access_token(json_object *j);
 std::string get_sdk_capabilities(json_object *j);
 std::string get_daily_download_manifest(json_object *j);
 std::string get_play_ads(json_object *j);
-std::string get_skip_policy(json_object *j);
 std::string get_tod_policy(json_object *j);
 std::string get_token_expiration(json_object *j);
 std::string get_server_state(json_object *j);
