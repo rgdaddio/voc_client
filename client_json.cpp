@@ -253,24 +253,6 @@ std::string get_download_time()
   return std::to_string(milliseconds_since_epoch()/1000);
 }
 
-std::string get_content_provider(json_object *j) //j is an array object
-{
-  std::string err = "error";
-  std::string empty = "null";
-  for(int i = 0; i < json_object_array_length(j); i++)
-    {
-      json_object *lobj = json_object_array_get_idx(j, i);
-      json_object *objtor;
-      bool status;
-      if((status = json_object_object_get_ex(lobj, "provider", &objtor)))
-        {
-	  if(json_object_get_type(objtor) == json_type_null)
-            return empty;
-	  return json_object_get_string(objtor);                                                                                          
-        }
-    }
-  return err;
-}
 
 std::string get_category(json_object *j) //j is an array object 
 {
@@ -310,61 +292,7 @@ std::string get_unique_id(json_object *j) //j is an array object
   return err;
 }
 
-std::string get_summary(json_object *j) //j is an array object
-{
-  std::string err = "error";
-  std::string empty = "null";
-  for(int i = 0; i < json_object_array_length(j); i++)
-    {
-      json_object *lobj = json_object_array_get_idx(j, i);
-      json_object *objtor;
-      bool status;
-      if((status = json_object_object_get_ex(lobj, "summary", &objtor)))
-        {
-	  if(json_object_get_type(objtor) == json_type_null)
-            return empty;
-          return json_object_get_string(objtor);
-        }
-    }
-  return err;
-}
 
-std::string get_title(json_object *j) //j is an array object
-{
-  std::string err = "error";
-  std::string empty = "null";
-  for(int i = 0; i < json_object_array_length(j); i++)
-    {
-      json_object *lobj = json_object_array_get_idx(j, i);
-      json_object *objtor;
-      bool status;
-      if((status = json_object_object_get_ex(lobj, "title", &objtor)))
-	{
-	  if(json_object_get_type(objtor) == json_type_null)
-            return empty;
-          return json_object_get_string(objtor);
-	}
-    }
-  return err;
-}
-
-std::string get_time_stamp(json_object *j) //j is an array object 
-{
-
-  std::string err = "error";
-
-  for(int i = 0; i < json_object_array_length(j); i++)
-    {
-      json_object *lobj = json_object_array_get_idx(j, i);
-      json_object *objtor;
-      bool status;
-      if((status = json_object_object_get_ex(lobj, "timeStamp", &objtor)))
-	{
-          return json_object_get_string(objtor);
-	}
-    }
-  return err;
-}
 
 static std::string parse_json_comma_list(std::string list, int item)
 {
@@ -455,33 +383,6 @@ std::string get_streams(json_object *j) //j is an array object
   return err;
 }
 
-std::string get_adserver_url(json_object *j) //j is an array object
-{
-  std::stringstream s;
-  std::string err = "error";
-  std::string empty = "null";
-  for(int i = 0; i < json_object_array_length(j); i++)
-    {
-      json_object *lobj = json_object_array_get_idx(j, i);
-      json_object *objtor;
-      bool status;
-      if((status = json_object_object_get_ex(lobj, "adServerUrl", &objtor)))
-        {
-	  if(json_object_get_type(objtor) == json_type_null)
-            {
-	      //return json_type_to_name(json_type_null);                                                            
-              //s << json_type_to_name(json_type_null);
-	      //std::cout << "type to name " << s.str() << std::endl;
-	      //std::string test = s.str();
-              //return s.str();
-	      return empty;
-            }
-	  std::cout << "adserv: " << json_object_get_type(objtor) << std::endl;
-          return json_object_get_string(objtor);
-        }
-    }
-  return err;
-}
 
 std::string get_tags(json_object *j) //j is an array object
 {
@@ -633,24 +534,6 @@ std::string get_policy_name(json_object *j) //j is an array object
   return err;
 }
 
-std::string get_key_server_url(json_object *j) //j is an array object 
-{
-  std::string err = "error";
-  std::string empty = "null";
-  for(int i = 0; i < json_object_array_length(j); i++)
-    {
-      json_object *lobj = json_object_array_get_idx(j, i);
-      json_object *objtor;
-      bool status;
-      if((status = json_object_object_get_ex(lobj, "keyServerUrl", &objtor)))
-        {
-	  if(json_object_get_type(objtor) == json_type_null)
-            return empty;
-          return json_object_get_string(objtor);
-        }
-    }
-  return err;
-}
 
 
 std::string parse_provider_list(std::string jstr)

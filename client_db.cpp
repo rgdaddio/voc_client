@@ -354,6 +354,16 @@ int creat_cache_table_entry(sqlite3 *db, std::string jstr)
   std::string password = "test"; //remove
   std::string tnull = "NULL";
 
+  Json::Value root;   
+  Json::Reader reader;
+  bool parsingSuccessful = reader.parse( jstr.c_str(), root );     //parse process
+  if ( !parsingSuccessful )
+  {
+    std::cout  << "Failed to parse"
+           << reader.getFormattedErrorMessages();
+    return 0;
+  }
+
   json_object *new_obj = json_tokener_parse(jstr.c_str()); //the manifest is a json array
   std::string sqlstatement =
     "INSERT INTO cache_manifest (my_row, local_file, local_thumbnail, local_nfo, video_size, thumbnail_size, download_date, content_provider, category, unique_id, summary, title, duration,\
@@ -366,24 +376,24 @@ timestamp, sdk_metadata, streams, ad_server_url, tags, priority, object_type, th
     + quotesqlint((get_local_file_size(new_obj)).c_str()) + ","
     + quotesqlint((get_thumb_size(new_obj)).c_str()) + "," 
     + quotesqlint((get_download_time()).c_str()) + ","
-    + quotesql((get_content_provider(new_obj)).c_str()) + ","
+    + quotesql( root["provider"].asString() ) + ","
     + quotesql((get_category(new_obj)).c_str()) + ","
-    + quotesql((get_unique_id(new_obj)).c_str()) + ","
-    + quotesql((get_summary(new_obj)).c_str()) + ","
-    + quotesql((get_title(new_obj)).c_str()) + ","
+    + quotesql( root["contentUniqueId"].asString() ) + ","
+    + quotesql( root["summary"].asString() ) + ","
+    + quotesql( root["title"].asString() ) + ","
     + quotesqlint((get_duration(new_obj)).c_str()) + ","
-    + quotesqlint((get_time_stamp(new_obj)).c_str()) + ","
+    + quotesqlint(  std::to_string(root["timeStamp"].asInt()) ) + ","
     + quotesql((get_sdk_metadata(new_obj)).c_str()) + ","
     + quotesql((get_streams(new_obj)).c_str()) + ","
-    + quotesql((get_adserver_url(new_obj)).c_str()) + ","
+    + quotesql( root["adServerUrl"].asString() ) + ","
     + quotesql((get_tags(new_obj)).c_str()) + "," 
-    + quotesqlint((get_priority(new_obj)).c_str()) + ","
-    + quotesql((get_object_type(new_obj)).c_str()) + ","
+    + quotesqlint(  std::to_string(root["priority"].asInt()) ) + ","
+    + quotesql( root["objectType"].asString() ) + ","
     + quotesql((get_thumb_attribs(new_obj)).c_str()) + ","
     + quotesql((get_object_attribs(new_obj)).c_str()) + ","
     + quotesql((get_children(new_obj)).c_str()) + ","
-    + quotesql((get_policy_name(new_obj)).c_str()) + ","
-    + quotesql((get_key_server_url(new_obj)).c_str()) +
+    + quotesql( root["policyName"].asString() ) + ","
+    + quotesql( root["keyServerUrl"].asString() ) +
     ");";
   std::cout << "sql stmt: " << sqlstatement << std::endl;
   insert_voc_table(db, sqlstatement);
