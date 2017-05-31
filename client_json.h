@@ -27,7 +27,6 @@ std::string get_duration(json_object *j);
 std::string get_sdk_metadata(json_object *j);
 std::string get_streams(json_object *j);
 std::string get_tags(json_object *j);
-std::string get_object_type(json_object *j);
 std::string get_thumb_attribs(json_object *j);
 std::string get_object_attribs(json_object *j);
 std::string get_children(json_object *j);

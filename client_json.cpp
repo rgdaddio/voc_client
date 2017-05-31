@@ -273,24 +273,6 @@ std::string get_category(json_object *j) //j is an array object
   return err;
 }
 
-std::string get_unique_id(json_object *j) //j is an array object  
-{
-  std::string err = "error";
-  std::string empty = "null";
-  for(int i = 0; i < json_object_array_length(j); i++)
-    {
-      json_object *lobj = json_object_array_get_idx(j, i);
-      json_object *objtor;
-      bool status;
-      if((status = json_object_object_get_ex(lobj, "uniqueId", &objtor)))
-        {
-	  if(json_object_get_type(objtor) == json_type_null)
-            return empty;
-          return json_object_get_string(objtor);
-        }
-    }
-  return err;
-}
 
 
 
@@ -411,52 +393,6 @@ std::string get_tags(json_object *j) //j is an array object
   return err;
 }
 
-std::string get_priority(json_object *j) //j is an array object
-{
-  std::stringstream s;
-  std::string err = "error";
-  std::string empty = "null";
-  std::cout << "OBJ LEN IN PRI!!!!!!: " << json_object_array_length(j) << std::endl;
-  for(int i = 0; i < json_object_array_length(j); i++)
-    {
-      json_object *lobj = json_object_array_get_idx(j, i);
-      json_object *objtor;
-      bool status;
-      if((status = json_object_object_get_ex(lobj, "priority", &objtor)))
-        {
-	  //std::cout << "PRIORITY FOUND!!!!!!!!!!!!!!!!!" << json_object_get_int(objtor)<<std::endl;
-	  if(json_object_get_type(objtor) == json_type_null)
-            {
-	      return empty;
-            }
-          return json_object_get_string(objtor);
-	  //s << json_object_get_int(objtor);
-	  //std::cout << "print it " << s.str() << std::endl;
-          //return s.str();
-	}
-    }
-  return err;
-}
-
-std::string get_object_type(json_object *j) //j is an array object
-{
-  std::string empty = "null";
-  std::string err = "error";
-  std::cout << "IN TYPE!!!!!!!!" << std::endl;
-  for(int i = 0; i < json_object_array_length(j); i++)
-    {
-      json_object *lobj = json_object_array_get_idx(j, i);
-      json_object *objtor;
-      bool status;
-      if((status = json_object_object_get_ex(lobj, "objectType", &objtor)))
-	{
-	  if(json_object_get_type(objtor) == json_type_null)
-	    return empty;
-          return json_object_get_string(objtor);
-        }
-    }
-  return err;
-}
 
 std::string get_thumb_attribs(json_object *j) //j is an array object
 {
