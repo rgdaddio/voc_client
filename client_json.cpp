@@ -95,15 +95,6 @@ std::string get_daily_download_manifest(json_object *j)
 }
 
 
-std::string get_tod_policy(json_object *j)
-{
-  std::string rc;
-  json_object *tmp;
-  json_object_object_get_ex(j, "todPolicy", &tmp);
-  return (rc = json_object_get_string(tmp));
-}
-
-
 std::string get_token_expiration(json_object *j)
 {
   std::stringstream s;
@@ -442,26 +433,6 @@ std::string get_children(json_object *j) //j is an array object
     }
   return err;
 }
-
-std::string get_policy_name(json_object *j) //j is an array object
-{
-  std::string err = "error";
-  std::string empty = "null";
-  for(int i = 0; i < json_object_array_length(j); i++)
-    {
-      json_object *lobj = json_object_array_get_idx(j, i);
-      json_object *objtor;
-      bool status;
-      if((status = json_object_object_get_ex(lobj, "policyName", &objtor)))
-        {
-	  if(json_object_get_type(objtor) == json_type_null)
-            return empty;
-          return json_object_get_string(objtor);
-        }
-    }
-  return err;
-}
-
 
 
 std::string parse_provider_list(std::string jstr)
