@@ -348,7 +348,7 @@ int create_user_table_entry(sqlite3 *db, std::string jstr, std::string server)
   return 0;
 }
 
-int creat_cache_table_entry(sqlite3 *db, std::string jstr)
+int create_cache_table_entry(sqlite3 *db, std::string jstr)
 {
   std::string userId = "test"; //remove
   std::string password = "test"; //remove

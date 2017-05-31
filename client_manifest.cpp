@@ -20,7 +20,7 @@ int install_cache(std::string json)
 
   json_object * jobj = json_tokener_parse(json.c_str());
   if(jobj)
-    creat_cache_table_entry(db, json); //this loads json into db send json array obj
+    create_cache_table_entry(db, json); //this loads json into db send json array obj
   close_voc_db(db);
   return 0;
 }

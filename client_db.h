@@ -19,6 +19,6 @@ extern int create_content_table(sqlite3 *db);
 extern int create_consumption_table(sqlite3 *db);
 extern int create_ad_consumption_table(sqlite3 *db);
 extern int create_cache_table(sqlite3 *db);
-extern int creat_cache_table_entry(sqlite3 *db, std::string jstr);
+extern int create_cache_table_entry(sqlite3 *db, std::string jstr);
 std::map<std::string, std::string> get_voc_access_vals(sqlite3 *db);
 #endif
