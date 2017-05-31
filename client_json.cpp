@@ -65,15 +65,6 @@ std::string get_device_type(json_object *j)
   return (rc = "000000DEADBEEF");
 }
 
-std::string get_access_token(json_object *j)
-{
-  std::string rc;
-  json_object *tmp;
-  json_object_object_get_ex(j, "accessToken", &tmp);
-  return (rc = json_object_get_string(tmp));
-}
-
-
 
 std::string get_sdk_capabilities(json_object *j)
 {
@@ -82,18 +73,6 @@ std::string get_sdk_capabilities(json_object *j)
   json_object_object_get_ex(j, "sdkCapabilities", &tmp);
   return (rc = json_object_get_string(tmp));
 }
-
-std::string get_daily_download_manifest(json_object *j)
-{
-  std::stringstream s;
-  json_object *tmp;
-  json_object_object_get_ex(j, "dailyManifestCount", &tmp);
-  if(!tmp)
-    return 0;
-  s << json_object_get_int(tmp);
-  return s.str();
-}
-
 
 std::string get_token_expiration(json_object *j)
 {
